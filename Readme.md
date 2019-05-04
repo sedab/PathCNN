@@ -103,8 +103,6 @@ In the Load data section of `train.py` (lines ~85-96) please modify these variab
 
 **NOTE:** We are using a very useful tool called [CometML](https://www.comet.ml/) to keep track of our experiments. If you would like to use it as well, please modify the API key in the training code to your own API key (line ~57). Otherwise, you can remove the lines of code related to cometml. 
 
-#### 4.1. Train our model
-
 Run `train.py` to train with our CNN architecture. sbatch file `run_job.sh` is provided as an example script for submitting a GPU job for this script.
 
 * `--cuda`: enables cuda
@@ -150,7 +148,7 @@ Run `train.py` to train with our CNN architecture. sbatch file `run_job.sh` is p
 * `--method`: aggregation prediction method (max, default=average)
 
 
-### 4. Test model:
+### 5. Test model:
 
 Run ```test.py``` to evaluate a specific model on the test data, ```run_test.sh``` is the associated sbatch file.
 
@@ -158,21 +156,6 @@ Run ```test.py``` to evaluate a specific model on the test data, ```run_test.sh`
 * `--experiment` Name of experiment to test, same as in section 4.1
 * `--model`: Name of model to test, e.g. `epoch_10.pth`
 
-### 5. Metadata
-We explored concatenating the metadata included in the patient JSON file as additional information for the neural network to process. We did not fully implement this option because of a few reasons:
-
-* Training was greatly slowed
-
-* Different cancers may not be compared on a fair basis (e.g. cigarettes smoked per day will be more informative for lung cancer than kidney cancer)
-
-* The work we were replicating did not use any metadata, and we wanted a fair comparison
-
-However, if you would like to try your hand at using the metadata you must:
-
-* Look at `iPython Notebooks/LungJsonDescription.ipynb` to explore the metadata you'd like to add
-* Create a dictionary of desired JSON inputs as per `JsonParser/LungJsonCleaner.py`
-* Modify `parse_json` in `utils/dataloader.py` to add the desired metadata (not implemented for kidney and breast)
-* Modify the `aggregate` function in `train.py` so that it concatenates the metadata to the image as per `utils/dataloader.py`. This is the main part that is not implemented for any of the cancers.
 
 ## Additional resources:
 
