@@ -1,6 +1,6 @@
 # Efficient pan-cancer whole-slide image classification using convolutional neural networks
 
-Code acompaining paper: [paper name](link)
+Code acompaining paper: [paper name](https://www.biorxiv.org/content/early/2019/05/14/633123.full.pdf)
 
 ## Prerequisites
 
@@ -153,6 +153,10 @@ Run ```test.py``` to evaluate a specific model on the test data, ```run_test.sh`
 * `--data`: Data to train on (lung/breast/kidney)
 * `--experiment` Name of experiment to test, same as in section 4.1
 * `--model`: Name of model to test, e.g. `epoch_10.pth`
+
+
+### 6. Pan-cancer analysis:
+
 
 
 ## Additional resources:
