@@ -161,6 +161,5 @@ Run ```test.py``` to evaluate a specific model on the test data, ```run_test.sh`
 
 * ```100RandomExamples.ipynb``` visualizes of 100 random examples of tiles in the datasets
 * ```Final evaluation and viz.ipynb``` provides code for visualizing the output prediction of a model, and also for evaluating a model on the test set on CPU
-* ```LungJsonDescription.ipynb``` explores the potential of metadata that can be used as extra information for training
 * ```new_transforms_examples.ipynb``` visualizes a few examples of the data augmentation used for training. One can tune the data augmentation here.
 
