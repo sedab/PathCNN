@@ -1,6 +1,6 @@
 # Efficient pan-cancer whole-slide image classification using convolutional neural networks
 
-Code acompaining paper: [paper name](https://www.biorxiv.org/content/early/2019/05/14/633123.full.pdf)
+Code acompaining paper: [Efficient pan-cancer whole-slide image classification and outlier detection using convolutional neural networks ](https://www.biorxiv.org/content/early/2019/05/14/633123.full.pdf)
 
 ## Prerequisites
 
