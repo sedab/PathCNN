@@ -1,0 +1,8 @@
+Starting at Thu Jun 27 14:42:44 EDT 2019
+Job name: PathCNN JobID: 2521538
+Running on hosts: gn-0021
+Running on 1 nodes.
+Running on  processors.
+mkdir: cannot create directory ‘experiments’: File exists
+mkdir: cannot create directory ‘experiments/test_01’: File exists
+mkdir: cannot create directory ‘experiments/test_01/images’: File exists

@@ -1,5 +1,3 @@
-from comet_ml import Experiment
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -47,6 +45,10 @@ parser.add_argument('--nonlinearity', type=str, default='relu', help='nonlineari
 parser.add_argument('--earlystop', action='store_true', help='trigger early stopping (boolean)')
 parser.add_argument('--method', type=str, default='average', help='aggregation prediction method (max, average)')
 parser.add_argument('--decay_lr', action='store_true', help='activate decay learning rate function')
+parser.add_argument('--root_dir', type=str, default='/beegfs/jmw784/Capstone/LungTilesSorted/', help='Data directory .../dataTilesSorted/')
+parser.add_argument('--num_class', type=int, default=2, help='number of classes ')
+parser.add_argument('--tile_dict_path', type=str, default='/beegfs/jmw784/Capstone/Lung_FileMappingDict.p', help='Tile dictinory path')
+
 opt = parser.parse_args()
 print(opt)
 
@@ -54,9 +56,6 @@ ngpu = int(opt.ngpu)
 nc = int(opt.nc)
 imgSize = int(opt.imgSize)
 
-experiment = Experiment(api_key="qcf4MjyyOhZj7Xw7UuPvZluts", log_code=True)
-hyper_params = vars(opt)
-experiment.log_multiple_params(hyper_params)
 
 """
 Save experiment 
@@ -82,18 +81,10 @@ cudnn.benchmark = True
 Load data
 """
 
-if opt.data == 'breast':
-    root_dir = "/beegfs/jmw784/Capstone/BreastTilesSorted/"
-    num_classes = 2
-    tile_dict_path = '/beegfs/jmw784/Capstone/Breast_FileMappingDict.p'
-elif opt.data == 'kidney':
-    root_dir = "/beegfs/jmw784/Capstone/KidneyTilesSorted/"
-    num_classes = 4
-    tile_dict_path = '/beegfs/jmw784/Capstone/Kidney_FileMappingDict.p'
-else:
-    root_dir = "/beegfs/jmw784/Capstone/LungTilesSorted/"
-    num_classes = 3
-    tile_dict_path = '/beegfs/jmw784/Capstone/Lung_FileMappingDict.p'
+root_dir = str(opt.root_dir)
+num_classes = int(opt.num_class)
+tile_dict_path = str(opt.tile_dict_path)
+
 
 # Random data augmentation
 augment = transforms.Compose([new_transforms.Resize((imgSize, imgSize)),
