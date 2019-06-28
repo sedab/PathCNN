@@ -164,7 +164,7 @@ Run ```test.py``` to evaluate a specific model on the test/validation data, ```r
 
 * `--tile_dict_path`: path to your Tile dictinory path (format="<ROOT_PATH><CANCER_TYPE>_FileMappingDict.p")
 
-* `--val`: validation vs test (default='test', or use 'val')
+* `--val`: validation vs test (default='test', or use 'valid')
 
 ### 6. TSNE Analysis:
 
