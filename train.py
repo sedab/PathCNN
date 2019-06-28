@@ -45,9 +45,10 @@ parser.add_argument('--nonlinearity', type=str, default='relu', help='nonlineari
 parser.add_argument('--earlystop', action='store_true', help='trigger early stopping (boolean)')
 parser.add_argument('--method', type=str, default='average', help='aggregation prediction method (max, average)')
 parser.add_argument('--decay_lr', action='store_true', help='activate decay learning rate function')
-parser.add_argument('--root_dir', type=str, default='/beegfs/jmw784/Capstone/LungTilesSorted/', help='Data directory .../dataTilesSorted/')
+parser.add_argument('--root_dir', type=str, default='<ROOT_PATH><CANCER_TYPE>TilesSorted/', help='Data directory .../dataTilesSorted/')
 parser.add_argument('--num_class', type=int, default=2, help='number of classes ')
-parser.add_argument('--tile_dict_path', type=str, default='/beegfs/jmw784/Capstone/Lung_FileMappingDict.p', help='Tile dictinory path')
+parser.add_argument('--tile_dict_path', type=str, default='"<ROOT_PATH><CANCER_TYPE>_FileMappingDict.p', help='Tile dictinory path')
+
 
 opt = parser.parse_args()
 print(opt)
@@ -56,6 +57,7 @@ ngpu = int(opt.ngpu)
 nc = int(opt.nc)
 imgSize = int(opt.imgSize)
 
+print(opt.cuda)
 
 """
 Save experiment 

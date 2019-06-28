@@ -1,0 +1,4 @@
+usage: test.py [-h] [--data DATA] [--experiment EXPERIMENT] [--model MODEL]
+               [--root_dir ROOT_DIR] [--num_class NUM_CLASS]
+               [--tile_dict_path TILE_DICT_PATH] [--val VAL]
+test.py: error: unrecognized arguments: —val='test'

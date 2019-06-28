@@ -21,68 +21,26 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--data', type=str, default='lung', help='Data to train on (lung/breast/kidney/all)')
 parser.add_argument('--experiment', default='', help="name of experiment to test")
 parser.add_argument('--model', default='', help="name of model to test")
+parser.add_argument('--root_dir', type=str, default='<ROOT_PATH><CANCER_TYPE>TilesSorted/', help='Data directory .../dataTilesSorted/')
+parser.add_argument('--num_class', type=int, default=2, help='number of classes ')
+parser.add_argument('--tile_dict_path', type=str, default='"<ROOT_PATH><CANCER_TYPE>_FileMappingDict.p', help='Tile dictinory path')
+parser.add_argument('--val', type=str, default='test', help='validation set')
+
 opt = parser.parse_args()
 
-imgSize = 299
+root_dir = str(opt.root_dir)
+num_classes = int(opt.num_class)
+tile_dict_path = str(opt.tile_dict_path)
 
-if opt.data == 'breast':
-    root_dir = "/beegfs/jmw784/Capstone/BreastTilesSorted/"
-    num_classes = 2
-    tile_dict_path = '/beegfs/jmw784/Capstone/Breast_FileMappingDict.p'
-elif opt.data == 'kidney':
-    root_dir = "/beegfs/jmw784/Capstone/KidneyTilesSorted/"
-    num_classes = 4
-    tile_dict_path = '/beegfs/jmw784/Capstone/Kidney_FileMappingDict.p'
-elif opt.data == 'all':
-    root_dir = "/beegfs/sb3923/DeepCancer/alldata/alldata_dsTilesSorted/"
-    num_classes = 9
-    tile_dict_path = '/beegfs/sb3923/DeepCancer/alldata/alldata_ds_FileMappingDict.p'
-elif opt.data == 'Lusc_smoke':
-    root_dir = "/beegfs/sb3923/DeepCancer/alldata/lung_smoke_stage/Lusc_smoke/Lusc_smokeTilesSorted/"
-    num_classes = 2
-    tile_dict_path = '/beegfs/sb3923/DeepCancer/alldata/lung_smoke_stage/Lusc_smoke/Lusc_smoke_FileMappingDict.p'
-elif opt.data == 'Lusc_stage':
-    root_dir = "/beegfs/sb3923/DeepCancer/alldata/lung_smoke_stage/Lusc_stage/Lusc_stageTilesSorted/"
-    num_classes = 4
-    tile_dict_path = '/beegfs/sb3923/DeepCancer/alldata/lung_smoke_stage/Lusc_stage/Lusc_stage_FileMappingDict.p'
-elif opt.data == 'Luad_smoke':
-    root_dir = "/beegfs/sb3923/DeepCancer/alldata/lung_smoke_stage/Luad_smoke/Luad_smokeTilesSorted/"
-    num_classes = 2
-    tile_dict_path = '/beegfs/sb3923/DeepCancer/alldata/lung_smoke_stage/Luad_smoke/Luad_smoke_FileMappingDict.p'
-elif opt.data == 'Luad_stage':
-    root_dir = "/beegfs/sb3923/DeepCancer/alldata/lung_smoke_stage/Luad_stage/Luad_stageTilesSorted/"
-    num_classes = 4
-    tile_dict_path = '/beegfs/sb3923/DeepCancer/alldata/lung_smoke_stage/Luad_stage/Luad_stage_FileMappingDict.p'
-elif opt.data == 'Luad_batch':
-    root_dir = "/beegfs/sb3923/DeepCancer/alldata/LungBatch/Test/LungTilesSorted/"
-    num_classes = 2
-    tile_dict_path = '/beegfs/sb3923/DeepCancer/alldata/LungBatch/Test/Lung_FileMappingDict.p'
-elif opt.data == 'lung_ds1':
-    root_dir = "/beegfs/jmw784/Capstone/LungTilesSorted/"
-    num_classes = 3
-    tile_dict_path = '/beegfs/jmw784/Capstone/Lung_FileMappingDict.p'
-elif opt.data == 'lung_ds2':
-    root_dir = "/beegfs/jmw784/Capstone/LungTilesSorted/"
-    num_classes = 3
-    tile_dict_path = '/beegfs/jmw784/Capstone/Lung_FileMappingDict.p'
-elif opt.data == 'lung_ds3':
-    root_dir = "/beegfs/jmw784/Capstone/LungTilesSorted/"
-    num_classes = 3
-    tile_dict_path = '/beegfs/jmw784/Capstone/Lung_FileMappingDict.p'
-elif opt.data == 'batch':
-    root_dir = "/beegfs/sb3923/DeepCancer/alldata/LungBatch/Test/LungTilesSorted/"
-    num_classes = 2
-    tile_dict_path = '/beegfs/sb3923/DeepCancer/alldata/LungBatch/Test/Lung_FileMappingDict.p'
-else:
-    root_dir = "/beegfs/jmw784/Capstone/LungTilesSorted/"
-    num_classes = 3
-    tile_dict_path = '/beegfs/jmw784/Capstone/Lung_FileMappingDict.p'
+test_val = str(opt.val)
+
+imgSize = 299
 
 transform = transforms.Compose([new_transforms.Resize((imgSize,imgSize)),
                                 transforms.ToTensor(),
                                 transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
-test_data = TissueData(root_dir, 'test', transform = transform, metadata=False)
+test_data = TissueData(root_dir, test_val, transform = transform, metadata=False)
 test_loader = torch.utils.data.DataLoader(test_data, batch_size=32, shuffle=False)
 
 classes = test_data.classes
@@ -240,7 +198,7 @@ class cancer_CNN(nn.Module):
 model = cancer_CNN(3, imgSize, 1)
 model.cuda()
 
-model_path = "/scratch/sb3923/deep-cancer/experiments/" + opt.experiment + '/' + opt.model
+model_path = "experiments/" + opt.experiment + '/' + opt.model
 state_dict = torch.load(model_path)
 model.load_state_dict(state_dict)
 

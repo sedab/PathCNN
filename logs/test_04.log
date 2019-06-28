@@ -1,0 +1,4 @@
+Namespace(augment=True, batchSize=32, beta1=0.5, cuda=True, data='lung', decay_lr=False, dropout=0.1, earlystop=False, experiment='test_04', imgSize=299, init="'xavier'", lr=0.001, metadata=False, method='average', model='', nc=3, ngpu=1, niter=25, nonlinearity='relu', num_class=7, optimizer='Adam', root_dir='/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lungTilesSorted/', tile_dict_path='/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lung_FileMappingDict.p')
+True
+Random Seed:  9901
+Loading from: GBM
