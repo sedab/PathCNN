@@ -95,19 +95,15 @@ Note that this code assumes that the sorted tiles are stored in `<ROOT_PATH><CAN
 
 ### 4. Train model:
 
-In the Load data section of `train.py` (lines ~85-96) please modify these variables:
+Run `train.py` to train with our CNN architecture. sbatch file `run_job.sh` is provided as an example script for submitting a GPU job for this script. Following is an example for calling run_job.sh that accept two arguments (1.Arguments for Parser , 2.experiment name-test):
 
-* `root_dir = "<ROOT_PATH><CANCER_TYPE>TilesSorted/"`, change the path to your file path
-
-* `tile_dict_path = "<ROOT_PATH><CANCER_TYPE>_FileMappingDict.p`, change the path to your tile dict path
-
-Run `train.py` to train with our CNN architecture. sbatch file `run_job.sh` is provided as an example script for submitting a GPU job for this script.
+**sbatch run_job.sh "--cuda  --augment --dropout=0.1 --init='leaky' --init=‘xavier’ --niter=35 --root_dir=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lungTilesSorted/ --num_class=7 --tile_dict_path=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lung_FileMappingDict.p" tes**
 
 * `--cuda`: enables cuda
 
 * `--ngpu`: number of GPUs to use (default=1)
 
-* `--data`: data to train on (lung/breast/kidney)
+* `--data`: data to train on (lung/breast/kidney etc. = <CANCER_TYPE>)
 
 * `--augment`: use data augmentation or not
 
@@ -145,18 +141,54 @@ Run `train.py` to train with our CNN architecture. sbatch file `run_job.sh` is p
 
 * `--method`: aggregation prediction method (max, default=average)
 
+* `--num_class`: number of classes (default=2)
+
+* `--root_dir`: path to your sorted tiles Data directory .../dataTilesSorted/ (format="<ROOT_PATH><CANCER_TYPE>TilesSorted/")
+
+* `--tile_dict_path`: path to your Tile dictinory path (format="<ROOT_PATH><CANCER_TYPE>_FileMappingDict.p")
+
 
 ### 5. Test model:
 
-Run ```test.py``` to evaluate a specific model on the test data, ```run_test.sh``` is the associated sbatch file.
+Run ```test.py``` to evaluate a specific model on the test/validation data, ```run_test.sh``` is the associated sbatch file. Following is an example for calling run_job.sh that accept two arguments (1.Arguments for Parser , 2.experiment name (test)). 
+
+**sbatch run_test.sh "--data='brain-kidney-lung'  --model='step_99000.pth'  --root_dir=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lungTilesSorted/ --num_class=7 --tile_dict_path=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lung_FileMappingDict.p --val='test'" test**
 
 * `--data`: Data to train on (lung/breast/kidney)
-* `--experiment` Name of experiment to test, same as in section 4.1
+
 * `--model`: Name of model to test, e.g. `epoch_10.pth`
 
+* `--num_class`: number of classes (default=2)
 
-### 6. Pan-cancer analysis:
+* `--root_dir`: path to your sorted tiles Data directory .../dataTilesSorted/ (format="<ROOT_PATH><CANCER_TYPE>TilesSorted/")
 
+* `--tile_dict_path`: path to your Tile dictinory path (format="<ROOT_PATH><CANCER_TYPE>_FileMappingDict.p")
+
+* `--val`: validation vs test (default='test', or use 'valid')
+
+The output data will be dumped under experiments/experiment_name folder.
+
+### 6. Evaluation:
+
+Use JupyterNotebooks/test_evaluation-exclude-normal.ipynb to create the ROC curves and calculate the confidence intervals. 
+
+### 7. TSNE Analysis:
+
+Once the model is trained, run ```tsne.py``` to extract the last layer weights to create the TSNE plots, ```run_tsne.sh``` is the associated sbatch file.
+
+**sbatch run_tsne.sh "--root_dir=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lungTilesSorted/ --num_class=7 --tile_dict_path=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lung_FileMappingDict.p --val='test'" test**
+
+* `--num_class`: number of classes (default=2)
+
+* `--root_dir`: path to your sorted tiles Data directory .../dataTilesSorted/ (format="<ROOT_PATH><CANCER_TYPE>TilesSorted/")
+
+* `--tile_dict_path`: path to your Tile dictinory path (format="<ROOT_PATH><CANCER_TYPE>_FileMappingDict.p")
+
+* `--val`: validation vs test (default='test', or use 'valid')
+
+The output data will be saved at tsne_data folder
+
+* Use TSNE/tsne_visualize.ipynb to visualize the results (change the input file name to match with tsne.py output files  at tsne_data as needed)
 
 
 ## Additional resources:
