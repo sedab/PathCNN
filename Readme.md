@@ -95,19 +95,15 @@ Note that this code assumes that the sorted tiles are stored in `<ROOT_PATH><CAN
 
 ### 4. Train model:
 
-In the Load data section of `train.py` (lines ~85-96) please modify these variables:
+Run `train.py` to train with our CNN architecture. sbatch file `run_job.sh` is provided as an example script for submitting a GPU job for this script. Following is an example for calling run_job.sh that accept two arguments (1., 2.experiment name-test):
 
-* `root_dir = "<ROOT_PATH><CANCER_TYPE>TilesSorted/"`, change the path to your file path
-
-* `tile_dict_path = "<ROOT_PATH><CANCER_TYPE>_FileMappingDict.p`, change the path to your tile dict path
-
-Run `train.py` to train with our CNN architecture. sbatch file `run_job.sh` is provided as an example script for submitting a GPU job for this script.
+**sbatch run_job.sh "--cuda  --augment --dropout=0.1 --init='leaky' --init=‘xavier’ --niter=35 --root_dir=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lungTilesSorted/ --num_class=7 --tile_dict_path=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lung_FileMappingDict.p" tes**
 
 * `--cuda`: enables cuda
 
 * `--ngpu`: number of GPUs to use (default=1)
 
-* `--data`: data to train on (lung/breast/kidney)
+* `--data`: data to train on (lung/breast/kidney etc. = <CANCER_TYPE>)
 
 * `--augment`: use data augmentation or not
 
@@ -144,6 +140,12 @@ Run `train.py` to train with our CNN architecture. sbatch file `run_job.sh` is p
 * `--dropout`: probability of dropout in each block (default=0.5)
 
 * `--method`: aggregation prediction method (max, default=average)
+
+* `--num_class`: number of classes (default=2)
+
+* `--root_dir`: path to your sorted tiles Data directory .../dataTilesSorted/ (format="<ROOT_PATH><CANCER_TYPE>TilesSorted/")
+
+* `--tile_dict_path`: path to your Tile dictinory path (format="<ROOT_PATH><CANCER_TYPE>_FileMappingDict.p")
 
 
 ### 5. Test model:
