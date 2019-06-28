@@ -166,7 +166,9 @@ Run ```test.py``` to evaluate a specific model on the test/validation data, ```r
 
 * `--val`: validation vs test (default='test', or use 'val')
 
-### 6. Pan-cancer analysis:
+### 6. TSNE Analysis:
+
+Once the model is trained, run ```tsne.py``` to extract the last layer weights to create the TSNE plots, ```run_tsne.sh``` is the associated sbatch file.
 
 
 ## Additional resources:
