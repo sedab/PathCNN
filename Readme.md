@@ -166,10 +166,30 @@ Run ```test.py``` to evaluate a specific model on the test/validation data, ```r
 
 * `--val`: validation vs test (default='test', or use 'valid')
 
-### 6. TSNE Analysis:
+The output data will be dumped under experiments/experiment_name folder.
+
+### 6. Evaluation:
+
+Use JupyterNotebooks/test_evaluation-exclude-normal.ipynb to create the ROC curves and calculate the confidence intervals.
+
+
+### 7. TSNE Analysis:
 
 Once the model is trained, run ```tsne.py``` to extract the last layer weights to create the TSNE plots, ```run_tsne.sh``` is the associated sbatch file.
 
+**sbatch run_tsne.sh "--root_dir=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lungTilesSorted/ --num_class=7 --tile_dict_path=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lung_FileMappingDict.p --val='test'" test**
+
+* `--num_class`: number of classes (default=2)
+
+* `--root_dir`: path to your sorted tiles Data directory .../dataTilesSorted/ (format="<ROOT_PATH><CANCER_TYPE>TilesSorted/")
+
+* `--tile_dict_path`: path to your Tile dictinory path (format="<ROOT_PATH><CANCER_TYPE>_FileMappingDict.p")
+
+* `--val`: validation vs test (default='test', or use 'valid')
+
+The output data will be saved at tsne_data folder
+
+* Use TSNE/tsne_visualize.ipynb to visualize the results
 
 ## Additional resources:
 
