@@ -170,8 +170,7 @@ The output data will be dumped under experiments/experiment_name folder.
 
 ### 6. Evaluation:
 
-Use JupyterNotebooks/test_evaluation-exclude-normal.ipynb to create the ROC curves and calculate the confidence intervals.
-
+Use JupyterNotebooks/test_evaluation-exclude-normal.ipynb to create the ROC curves and calculate the confidence intervals. 
 
 ### 7. TSNE Analysis:
 
@@ -189,7 +188,8 @@ Once the model is trained, run ```tsne.py``` to extract the last layer weights t
 
 The output data will be saved at tsne_data folder
 
-* Use TSNE/tsne_visualize.ipynb to visualize the results
+* Use TSNE/tsne_visualize.ipynb to visualize the results (change the input file name to match with tsne.py output files  at tsne_data as needed)
+
 
 ## Additional resources:
 
