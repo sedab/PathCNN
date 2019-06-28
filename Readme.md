@@ -150,15 +150,23 @@ Run `train.py` to train with our CNN architecture. sbatch file `run_job.sh` is p
 
 ### 5. Test model:
 
-Run ```test.py``` to evaluate a specific model on the test data, ```run_test.sh``` is the associated sbatch file.
+Run ```test.py``` to evaluate a specific model on the test/validation data, ```run_test.sh``` is the associated sbatch file. Following is an example for calling run_job.sh that accept two arguments (1.Arguments for Parser , 2.experiment name (test)). 
+
+**sbatch run_test.sh "--data='brain-kidney-lung'  --model='step_99000.pth'  --root_dir=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lungTilesSorted/ --num_class=7 --tile_dict_path=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lung_FileMappingDict.p --val='test'" test**
 
 * `--data`: Data to train on (lung/breast/kidney)
-* `--experiment` Name of experiment to test, same as in section 4.1
+
 * `--model`: Name of model to test, e.g. `epoch_10.pth`
 
+* `--num_class`: number of classes (default=2)
+
+* `--root_dir`: path to your sorted tiles Data directory .../dataTilesSorted/ (format="<ROOT_PATH><CANCER_TYPE>TilesSorted/")
+
+* `--tile_dict_path`: path to your Tile dictinory path (format="<ROOT_PATH><CANCER_TYPE>_FileMappingDict.p")
+
+* `--val`: validation vs test (default='test', or use 'val')
 
 ### 6. Pan-cancer analysis:
-
 
 
 ## Additional resources:
