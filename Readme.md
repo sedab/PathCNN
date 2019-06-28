@@ -152,7 +152,7 @@ Run `train.py` to train with our CNN architecture. sbatch file `run_job.sh` is p
 
 Run ```test.py``` to evaluate a specific model on the test/validation data, ```run_test.sh``` is the associated sbatch file. Following is an example for calling run_job.sh that accept two arguments (1.Arguments for Parser , 2.experiment name (test)). 
 
-**sbatch run_test.sh "--data='brain-kidney-lung'  --model='step_99000.pth'  --root_dir=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lungTilesSorted/ --num_class=7 --tile_dict_path=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lung_FileMappingDict.p --val='test'" test**
+**sbatch run_test.sh "--data='brain-kidney-lung'  --model='step_99000.pth'  --root_dir=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lungTilesSorted/ --num_class=7 --tile_dict_path=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lung_FileMappingDict.p --val=test" test**
 
 * `--data`: Data to train on (lung/breast/kidney)
 
@@ -176,7 +176,7 @@ Use JupyterNotebooks/test_evaluation-exclude-normal.ipynb to create the ROC curv
 
 Once the model is trained, run ```tsne.py``` to extract the last layer weights to create the TSNE plots, ```run_tsne.sh``` is the associated sbatch file.
 
-**sbatch run_tsne.sh "--root_dir=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lungTilesSorted/ --num_class=7 --tile_dict_path=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lung_FileMappingDict.p --val='test'" test**
+**sbatch run_tsne.sh "--root_dir=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lungTilesSorted/ --num_class=7 --tile_dict_path=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lung_FileMappingDict.p --val=test" test**
 
 * `--num_class`: number of classes (default=2)
 
