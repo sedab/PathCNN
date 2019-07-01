@@ -170,7 +170,7 @@ The output data will be dumped under experiments/experiment_name folder.
 
 ### 6. Evaluation:
 
-Use JupyterNotebooks/test_evaluation-exclude-normal.ipynb to create the ROC curves and calculate the confidence intervals. 
+Use JupyterNotebooks/test_evaluation-exclude-normal.ipynb to create the ROC curves and calculate the confidence intervals. To start a jupyter notebook on bigpurple, submit the run-jupyter.sbatch script and the follow the instructions on the output file.
 
 ### 7. TSNE Analysis:
 
