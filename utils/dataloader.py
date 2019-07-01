@@ -25,8 +25,7 @@ class TissueData(data.Dataset):
 
         self.data = data
 
-        json_dict_path = ''
-
+        #json_dict_path = ''
         #with open(json_dict_path, 'rb') as f:
         #    self.json = pickle.load(f)
 
