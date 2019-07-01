@@ -198,7 +198,7 @@ class cancer_CNN(nn.Module):
 model = cancer_CNN(3, imgSize, 1)
 model.cuda()
 
-model_path = "experiments/" + opt.experiment + '/' + opt.model
+model_path = "experiments/" + opt.experiment + '/checkpoints/' + opt.model
 state_dict = torch.load(model_path)
 model.load_state_dict(state_dict)
 

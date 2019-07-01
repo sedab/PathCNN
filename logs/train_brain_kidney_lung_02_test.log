@@ -1,7 +1,18 @@
 Loading from: GBM
-number of samples: 0
+number of samples: 214281
 Loading from: LUSC
-number of samples: 0
+number of samples: 162797
 Loading from: KICH
-number of samples: 0
+number of samples: 49650
 Loading from: LGG
+number of samples: 244261
+Loading from: LUAD
+number of samples: 185047
+Loading from: KIRC
+number of samples: 181847
+Loading from: KIRP
+number of samples: 136399
+Class encoding:
+{'GBM': 0, 'KICH': 1, 'KIRC': 2, 'KIRP': 3, 'LGG': 4, 'LUAD': 5, 'LUSC': 6}
+Max method:
+{0: 0.963753766681016, 1: 0.9954535373697051, 2: 0.9851655025812329, 3: 0.9885167464114833, 4: 0.9567659082462733, 5: 0.9618281202550867, 6: 0.956096196868009, 'micro': 0.9498962359064601, 'macro': 0.9729104968389085}

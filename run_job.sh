@@ -4,7 +4,7 @@
 #SBATCH --gres=gpu:4
 #SBATCH --output=outputs/rq_train1_%A_%a.out
 #SBATCH --error=outputs/rq_train1_%A_%a.err
-#SBATCH --mem=100GB
+#SBATCH --mem=200GB
 
 ##### above is for on nyulmc hpc: bigpurple #####
 ##### below is for on nyu hpc: prince #####
@@ -34,4 +34,6 @@ module load python/gpu/3.6.5
 
 cd /gpfs/scratch/bilals01/test-repo/PathCNN/
 
-python3 -u train.py $1 --experiment $2 > logs/$2.log
+python3 -u train_.py $1 --experiment $2  > logs/$2_test.log
+
+
