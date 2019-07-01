@@ -25,15 +25,10 @@ class TissueData(data.Dataset):
 
         self.data = data
 
-        if self.data == 'breast':
-            json_dict_path = '/scratch/jmw784/capstone/Charrrrtreuse/JsonParser/BreastJsonData.p'
-        elif self.data == 'kidney':
-            json_dict_path = '/scratch/jmw784/capstone/Charrrrtreuse/JsonParser/KidneyJsonData.p'
-        else:
-            json_dict_path = '/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/LungJsonData.p'
+        json_dict_path = ''
 
-        with open(json_dict_path, 'rb') as f:
-            self.json = pickle.load(f)
+        #with open(json_dict_path, 'rb') as f:
+        #    self.json = pickle.load(f)
 
         self.root = root
         self.classes = classes
