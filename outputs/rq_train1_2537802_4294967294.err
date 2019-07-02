@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "test.py", line 38, in <module>
-    test_data = TissueData(root_dir, 'test', transform = transform, metadata=False)
-NameError: name 'root_dir' is not defined

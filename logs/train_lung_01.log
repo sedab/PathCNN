@@ -1,3 +1,0 @@
-Namespace(augment=True, batchSize=32, beta1=0.5, cuda=True, data='lung', decay_lr=False, dropout=0.1, earlystop=False, experiment='train_lung_01', imgSize=299, init="'xavier'", lr=0.001, metadata=False, method='average', model='', nc=3, ngpu=1, niter=25, nonlinearity='relu', num_class=3, optimizer='Adam', root_dir='/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/LungTilesSorted/', step_freq=100000000, tile_dict_path='/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/Lung_FileMappingDict.p')
-Random Seed:  2117
-Loading from: Solid_Tissue_Normal

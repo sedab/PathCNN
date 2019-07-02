@@ -1,4 +1,0 @@
-usage: test.py [-h] [--data DATA] [--experiment EXPERIMENT] [--model MODEL]
-               [--root_dir ROOT_DIR] [--num_class NUM_CLASS]
-               [--tile_dict_path TILE_DICT_PATH] [--val VAL]
-test.py: error: unrecognized arguments: —data='brain-kidney-lung' root_dir=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lungTilesSorted/ —val='test'

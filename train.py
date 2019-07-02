@@ -64,6 +64,7 @@ imgSize = int(opt.imgSize)
 root_dir = str(opt.root_dir)
 num_classes = int(opt.num_class)
 tile_dict_path = str(opt.tile_dict_path)
+step_freq = int(opt.step_freq)
 
 """
 Save experiment 
