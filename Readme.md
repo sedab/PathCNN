@@ -99,6 +99,8 @@ Run `train.py` to train with our CNN architecture. sbatch file `run_job.sh` is p
 
 **sbatch run_job.sh "--cuda  --augment --dropout=0.1 --init='leaky' --init=‘xavier’ --niter=35 --root_dir=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lungTilesSorted/ --num_class=7 --tile_dict_path=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lung_FileMappingDict.p" tes**
 
+The checkpoints at every epoch and steps (frequency determined by the user using step_freq) will be saved at experiments/checkpoints folder. And the validation predictions and labels will be saved under experiments/outputs folder.
+
 * `--cuda`: enables cuda
 
 * `--ngpu`: number of GPUs to use (default=1)
@@ -146,6 +148,8 @@ Run `train.py` to train with our CNN architecture. sbatch file `run_job.sh` is p
 * `--root_dir`: path to your sorted tiles Data directory .../dataTilesSorted/ (format="<ROOT_PATH><CANCER_TYPE>TilesSorted/")
 
 * `--tile_dict_path`: path to your Tile dictinory path (format="<ROOT_PATH><CANCER_TYPE>_FileMappingDict.p")
+
+* `--step_freq`: how often to save the results and the checkpoints (default=100000000; won't save any steps, as this number set very high)
 
 
 ### 5. Test model:
