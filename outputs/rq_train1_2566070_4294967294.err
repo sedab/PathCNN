@@ -1,0 +1,11 @@
+mkdir: cannot create directory ‘experiments’: File exists
+train_.py:445: UserWarning: invalid index of a 0-dim tensor. This will be an error in PyTorch 0.5. Use tensor.item() to convert a 0-dim tensor to a Python number
+  % (epoch, opt.niter, i, len(loaders['train']), train_loss.data[0]))
+train_.py:256: UserWarning: volatile was removed and now has no effect. Use `with torch.no_grad():` instead.
+  var_img = Variable(img, volatile=True)
+train_.py:257: UserWarning: Implicit dimension choice for softmax has been deprecated. Change the call to include dim=X as an argument.
+  output = F.softmax(model(var_img)).data.squeeze(0)
+Traceback (most recent call last):
+  File "train_.py", line 453, in <module>
+    
+FileNotFoundError: [Errno 2] No such file or directory: 'experiments/test_06/pred_label_avg_test_06_step_1000.npy'

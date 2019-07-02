@@ -1,7 +1,7 @@
 #!/bin/bash
-#SBATCH --partition=gpu8_medium
+#SBATCH --partition=gpu8_long
 #SBATCH --job-name=PathCNN_train
-#SBATCH --gres=gpu:4
+#SBATCH --gres=gpu:1
 #SBATCH --output=outputs/rq_train1_%A_%a.out
 #SBATCH --error=outputs/rq_train1_%A_%a.err
 #SBATCH --mem=200GB
@@ -34,6 +34,6 @@ module load python/gpu/3.6.5
 
 cd /gpfs/scratch/bilals01/test-repo/PathCNN/
 
-python3 -u train_.py $1 --experiment $2  > logs/$2_test.log
+python3 -u train_.py $1 --experiment $2  > logs/$2.log
 
 

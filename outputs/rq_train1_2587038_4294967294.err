@@ -1,0 +1,3 @@
+mkdir: cannot create directory ‘experiments’: File exists
+train_.py:437: UserWarning: invalid index of a 0-dim tensor. This will be an error in PyTorch 0.5. Use tensor.item() to convert a 0-dim tensor to a Python number
+  % (epoch, opt.niter, i, len(loaders['train']), train_loss.data[0]))

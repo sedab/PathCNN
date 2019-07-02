@@ -1,9 +1,0 @@
-Namespace(augment=True, batchSize=32, beta1=0.5, cuda=True, data='lung', decay_lr=False, dropout=0.1, earlystop=False, experiment='test_01', imgSize=299, init='‘xavier’', lr=0.001, metadata=False, method='average', model='', nc=3, ngpu=1, niter=35, nonlinearity='relu', num_class=7, optimizer='Adam', root_dir='/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lungTilesSorted/', tile_dict_path='/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lung_FileMappingDict.p')
-Random Seed:  564
-Loading from: GBM
-number of samples: 1058439
-Loading from: LUSC
-number of samples: 835273
-Loading from: KICH
-number of samples: 198687
-Loading from: LGG
