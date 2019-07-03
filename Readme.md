@@ -97,15 +97,13 @@ Note that this code assumes that the sorted tiles are stored in `<ROOT_PATH><CAN
 
 Run `train.py` to train with our CNN architecture. sbatch file `run_job.sh` is provided as an example script for submitting a GPU job for this script. Following is an example for calling run_job.sh that accept two arguments (1.Arguments for Parser , 2.experiment name-test):
 
-**sbatch run_job.sh "--cuda  --augment --dropout=0.1 --init='leaky' --init=‘xavier’ --niter=35 --root_dir=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lungTilesSorted/ --num_class=7 --tile_dict_path=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lung_FileMappingDict.p" tes**
+**sbatch run_job.sh "--cuda  --augment --dropout=0.1 --nonlinearity='leaky' --init=‘xavier’ --root_dir=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lungTilesSorted/ --num_class=7 --tile_dict_path=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lung_FileMappingDict.p" tes**
 
 The checkpoints at every epoch and steps (frequency determined by the user using step_freq) will be saved at experiments/checkpoints folder. And the validation predictions and labels will be saved under experiments/outputs folder.
 
 * `--cuda`: enables cuda
 
 * `--ngpu`: number of GPUs to use (default=1)
-
-* `--data`: data to train on (lung/breast/kidney etc. = <CANCER_TYPE>)
 
 * `--augment`: use data augmentation or not
 
