@@ -99,7 +99,7 @@ Run `train.py` to train with our CNN architecture. sbatch file `run_job.sh` is p
 
 **sbatch run_job.sh "--cuda  --augment --dropout=0.1 --nonlinearity='leaky' --init=‘xavier’ --root_dir=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lungTilesSorted/ --num_class=7 --tile_dict_path=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lung_FileMappingDict.p" tes**
 
-The model checkpoints at every epoch and steps (frequency determined by the user using step_freq) will be saved at experiments/checkpoints folder. And the *validation set* predictions and labels will be saved under experiments/outputs folder.
+The model checkpoints at every epoch and steps (frequency determined by the user using step_freq) will be saved at experiments/checkpoints folder. And the **validation set** predictions and labels will be saved under experiments/outputs folder.
 
 * `--cuda`: enables cuda
 
