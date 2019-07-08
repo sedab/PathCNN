@@ -170,7 +170,7 @@ Run ```test.py``` to evaluate a specific model on the test/validation data, ```r
 
 The output data will be dumped under experiments/experiment_name folder.
 
--To run the test data with multiple check points, use run_multiple_test.sh script. Set the experiment, count and step variables in the script accordingly.
+* To run the test data with multiple check points, use run_multiple_test.sh script. Set the experiment, count and step variables in the script accordingly.
 
 ### 6. Evaluation:
 
