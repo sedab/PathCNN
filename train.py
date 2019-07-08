@@ -29,7 +29,6 @@ Options for training
 """
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--data', type=str, default='lung', help='Data to train on (lung/breast/kidney)')
 parser.add_argument('--batchSize', type=int, default=32, help='input batch size')
 parser.add_argument('--imgSize', type=int, default=299, help='the height / width of the image to network')
 parser.add_argument('--nc', type=int, default=3, help='input image channels (+ concatenated info channels if metadata = True)')
@@ -73,11 +72,11 @@ Save experiment
 if opt.experiment is None:
     opt.experiment = 'samples'
 
-os.system('mkdir experiments')
-os.system('mkdir experiments/{0}'.format(opt.experiment))
-os.system('mkdir experiments/{0}/images'.format(opt.experiment))
-os.system('mkdir experiments/{0}/checkpoints'.format(opt.experiment))
-os.system('mkdir experiments/{0}/outputs'.format(opt.experiment))
+#os.system('mkdir experiments')
+os.system('mkdir {0}'.format(opt.experiment))
+os.system('mkdir {0}/images'.format(opt.experiment))
+os.system('mkdir {0}/checkpoints'.format(opt.experiment))
+os.system('mkdir {0}/outputs'.format(opt.experiment))
 opt.manualSeed = random.randint(1, 10000) # fix seed
 print("Random Seed: ", opt.manualSeed)
 random.seed(opt.manualSeed)
@@ -183,7 +182,7 @@ class cancer_CNN(nn.Module):
         self.nc = nc
         self.imgSize = imgSize
         self.ngpu = ngpu
-        self.data = opt.data
+        #self.data = opt.data
         self.conv1 = BasicConv2d(nc, 16, False, kernel_size=5, padding=1, stride=2, bias=True)
         self.conv2 = BasicConv2d(16, 32, False, kernel_size=3, bias=True)
         self.conv3 = BasicConv2d(32, 64, True, kernel_size=3, padding=1, bias=True)
@@ -436,11 +435,11 @@ for epoch in range(opt.niter+1):
             val_predictions, val_labels = aggregate(data['valid'].filenames, method=opt.method)
 
             data_ = np.column_stack((np.asarray(val_predictions),np.asarray(val_labels)))
-            data_.dump(open('experiments/{0}/outputs/pred_label_avg_{0}_step_{1}.npy'.format(opt.experiment,str(ii)), 'wb'))
-            torch.save(model.state_dict(), 'experiments/{0}/checkpoints/step_{1}.pth'.format(opt.experiment, str(ii)))           
+            data_.dump(open('{0}/outputs/pred_label_avg_{0}_step_{1}.npy'.format(opt.experiment,str(ii)), 'wb'))
+            torch.save(model.state_dict(), '{0}/checkpoints/step_{1}.pth'.format(opt.experiment, str(ii)))           
             print('validation scores:')
 
-            roc_auc = get_auc('experiments/{0}/images/{1}.jpg'.format(opt.experiment,epoch), val_predictions, val_labels, classes = range(num_classes))
+            roc_auc = get_auc('{0}/images/{1}.jpg'.format(opt.experiment,epoch), val_predictions, val_labels, classes = range(num_classes))
             for k, v in roc_auc.items(): 
                 if k in range(num_classes):
                     k = classes[k] 
@@ -453,10 +452,10 @@ for epoch in range(opt.niter+1):
     # Get validation AUC once per epoch
     val_predictions, val_labels = aggregate(data['valid'].filenames, method=opt.method)
     data_ = np.column_stack((np.asarray(val_predictions),np.asarray(val_labels)))
-    data_.dump(open('experiments/{0}/outputs/pred_label_avg_{0}_epoch_{1}.npy'.format(opt.experiment,str(epoch)), 'wb'))
-    torch.save(model.state_dict(), 'experiments/{0}/checkpoints/epoch_{1}.pth'.format(opt.experiment, str(epoch)))
+    data_.dump(open('{0}/outputs/pred_label_avg_epoch_{1}.npy'.format(opt.experiment,str(epoch)), 'wb'))
+    torch.save(model.state_dict(), '{0}/checkpoints/epoch_{1}.pth'.format(opt.experiment, str(epoch)))
 
-    roc_auc = get_auc('experiments/{0}/images/{1}.jpg'.format(opt.experiment, epoch),
+    roc_auc = get_auc('{0}/images/{1}.jpg'.format(opt.experiment, epoch),
                       val_predictions, val_labels, classes = range(num_classes))
 
     for k, v in roc_auc.items():

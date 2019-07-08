@@ -62,7 +62,12 @@ class TissueData(data.Dataset):
             for root, _, fnames in os.walk(d):
                 for fname in fnames:
                     # Parse the filename
-                    dataset_type, raw_file, x, y = fname.strip('.jpeg').split('_')
+                    dataset_type = fname.strip('.jpeg').split('_')[0]
+                    y = fname.strip('.jpeg').split('_')[-1]
+                    x = fname.strip('.jpeg').split('_')[-2]
+                    raw_file = '_'.join(fname.strip('.jpeg').split('_')[1:-2])
+	            #dataset_type, raw_file, x, y = fname.strip('.jpeg').split('_')
+
                     raw_file_name = dset_type + '_' + raw_file
                     original_file = raw_file + '.svs'
         
