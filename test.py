@@ -174,7 +174,7 @@ class cancer_CNN(nn.Module):
         self.nc = nc
         self.imgSize = imgSize
         self.ngpu = ngpu
-        self.data = opt.data
+        #self.data = opt.data
         self.conv1 = BasicConv2d(nc, 16, False, kernel_size=5, padding=1, stride=2, bias=True)
         self.conv2 = BasicConv2d(16, 32, False, kernel_size=3, bias=True)
         self.conv3 = BasicConv2d(32, 64, True, kernel_size=3, padding=1, bias=True)

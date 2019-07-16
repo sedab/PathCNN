@@ -1,8 +1,0 @@
-/gpfs/scratch/bilals01/test-repo/PathCNN/train.py:431: UserWarning: invalid index of a 0-dim tensor. This will be an error in PyTorch 0.5. Use tensor.item() to convert a 0-dim tensor to a Python number
-  % (epoch, opt.niter, i, len(loaders['train']), train_loss.data[0]))
-/gpfs/scratch/bilals01/test-repo/PathCNN/train.py:259: UserWarning: volatile was removed and now has no effect. Use `with torch.no_grad():` instead.
-  var_img = Variable(img, volatile=True)
-/gpfs/scratch/bilals01/test-repo/PathCNN/train.py:260: UserWarning: Implicit dimension choice for softmax has been deprecated. Change the call to include dim=X as an argument.
-  output = F.softmax(model(var_img)).data.squeeze(0)
-/gpfs/share/apps/python/gpu/3.6.5/lib/python3.6/site-packages/matplotlib/pyplot.py:528: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`).
-  max_open_warning, RuntimeWarning)
