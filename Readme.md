@@ -95,9 +95,14 @@ Note that this code assumes that the sorted tiles are stored in `<ROOT_PATH><CAN
 
 ### 4. Train model:
 
-Run `train.py` to train with our CNN architecture. sbatch file `run_job.sh` is provided as an example script for submitting a GPU job for this script. Following is an example for calling run_job.sh that accept two arguments (1.Arguments for Parser , 2.experiment name-test):
+Run `train.py` to train with our CNN architecture. sbatch file `run_job.sh` is provided as an example script for submitting a GPU job for this script. Inside the run_job.sh, set parameteres: nexp, output and param as described below. You need to create two directories where the output of the training will be saved at: one for experiemnts, and one for logs. 
 
-**sbatch run_job.sh "--cuda  --augment --dropout=0.1 --nonlinearity='leaky' --init=‘xavier’ --root_dir=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lungTilesSorted/ --num_class=7 --tile_dict_path=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lung_FileMappingDict.p" tes**
+* `nexp` = "dir/experiments/exp" : will create a subfolder under experiments folder which will save the checkpoints and predcitions
+
+* `output` = "dir/logs/log.log" : will create a log file under the logs folder where the training output will be printed on.
+
+* `nparam` = "--cuda  --augment --dropout=0.1 --nonlinearity='leaky' --init=‘xavier’ --root_dir=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lungTilesSorted/ --num_class=7 --tile_dict_path=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lung_FileMappingDict.p"
+
 
 The model checkpoints at every epoch and steps (frequency determined by the user using step_freq) will be saved at experiments/checkpoints folder. And the **validation set** predictions and labels will be saved under experiments/outputs folder.
 
