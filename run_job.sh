@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --partition=gpu8_long
-#SBATCH --job-name=PathCNN_train
+#SBATCH --job-name=train_PCNN
 #SBATCH --gres=gpu:1
 #SBATCH --output=outputs/rq_train1_%A_%a.out
 #SBATCH --error=outputs/rq_train1_%A_%a.err

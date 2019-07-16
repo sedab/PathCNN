@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --partition=gpu8_medium
-#SBATCH --job-name=PathCNN_test
+#SBATCH --job-name=test_PCNN
 #SBATCH --gres=gpu:4
 #SBATCH --output=outputs/rq_train1_%A_%a.out
 #SBATCH --error=outputs/rq_train1_%A_%a.err
@@ -32,7 +32,12 @@ echo "Running on $SLURM_NPROCS processors."
 module purge
 module load python/gpu/3.6.5
 
-cd /gpfs/scratch/bilals01/test-repo/PathCNN/
+nparam="--model='epoch_2.pth' --root_dir=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/LungTilesSorted/ --num_class=7 --tile_dict_path=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/Lung_FileMappingDict.p --val=test"
 
-python3 -u test.py $1 --experiment $2  > logs/$2_test.log
+nexp="/gpfs/scratch/bilals01/test-repo/experiments/exp2"
+
+output="/gpfs/scratch/bilals01/test-repo/logs/log_test.log" 
+
+python3 -u /gpfs/scratch/bilals01/test-repo/PathCNN/test.py $nparam --experiment $nexp > $output
+
 

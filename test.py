@@ -18,7 +18,6 @@ from utils.auc import *
 from utils import new_transforms
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--data', type=str, default='lung', help='Data to train on (lung/breast/kidney/all)')
 parser.add_argument('--experiment', default='', help="name of experiment to test")
 parser.add_argument('--model', default='', help="name of model to test")
 parser.add_argument('--root_dir', type=str, default='<ROOT_PATH><CANCER_TYPE>TilesSorted/', help='Data directory .../dataTilesSorted/')
@@ -198,28 +197,28 @@ class cancer_CNN(nn.Module):
 model = cancer_CNN(3, imgSize, 1)
 model.cuda()
 
-model_path = "experiments/" + opt.experiment + '/checkpoints/' + opt.model
+model_path = opt.experiment + '/checkpoints/' + opt.model
 state_dict = torch.load(model_path)
 model.load_state_dict(state_dict)
 
 predictions, labels = aggregate(test_data.filenames, method='max')
 
 data = np.column_stack((np.asarray(predictions),np.asarray(labels)))
-data.dump(open('experiments/{0}/pred_label_max_{0}_{1}.npy'.format(opt.experiment,opt.model), 'wb'))
+data.dump(open('{0}/outputs/test_pred_label_max_{0}_{1}.npy'.format(opt.experiment,opt.model), 'wb'))
 
 #This can be used if need to print the auc and save the roc curve automatically
 
-roc_auc  = get_auc('experiments/{0}/images/test_AUC_max_{1}.jpg'.format(opt.experiment,opt.model),
+roc_auc  = get_auc('{0}/images/test_AUC_max_{1}.jpg'.format(opt.experiment,opt.model),
                    predictions, labels, classes = range(num_classes))
 print('Max method:')
 print(roc_auc)
 
 predictions, labels = aggregate(test_data.filenames, method='average')
 data = np.column_stack((np.asarray(predictions),np.asarray(labels)))
-data.dump(open('experiments/{0}/pred_label_avg_{0}_{1}.npy'.format(opt.experiment,opt.model), 'wb'))
+data.dump(open('{0}/outputs/test_pred_label_avg_{0}_{1}.npy'.format(opt.experiment,opt.model), 'wb'))
 
 #This can be used if need to print the auc and save the roc curve automatically
-roc_auc  = get_auc('experiments/{0}/images/test_AUC_avg_{1}.jpg'.format(opt.experiment,opt.model),
+roc_auc  = get_auc('{0}/images/test_AUC_avg_{1}.jpg'.format(opt.experiment,opt.model),
                    predictions, labels, classes = range(num_classes))
 print('Average method:')
 print(roc_auc)
