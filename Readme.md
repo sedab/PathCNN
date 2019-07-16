@@ -105,7 +105,7 @@ Run `train.py` to train with our CNN architecture. sbatch file `run_job.sh` is p
 
 The model checkpoints at every epoch and steps (frequency determined by the user using step_freq) will be saved at experiments/checkpoints folder. And the **validation set** predictions and labels will be saved under experiments/outputs folder.
 
-**nparam**
+**nparam:**
 * `--cuda`: enables cuda
 
 * `--ngpu`: number of GPUs to use (default=1)
@@ -165,7 +165,7 @@ Run ```test.py``` to evaluate a specific model on the test/validation data, ```r
 
 * `nparam` = "--model='epoch_2.pth' --root_dir=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/LungTilesSorted/ --num_class=7 --tile_dict_path=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/Lung_FileMappingDict.p --val=test"
 
-**nparam**
+**nparam:**
 * `--model`: Name of model to test, e.g. `epoch_10.pth`
 
 * `--num_class`: number of classes (default=2)
