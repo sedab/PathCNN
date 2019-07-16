@@ -103,9 +103,9 @@ Run `train.py` to train with our CNN architecture. sbatch file `run_job.sh` is p
 
 * `nparam` = "--cuda  --augment --dropout=0.1 --nonlinearity='leaky' --init=‘xavier’ --root_dir=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lungTilesSorted/ --num_class=7 --tile_dict_path=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lung_FileMappingDict.p"
 
-
 The model checkpoints at every epoch and steps (frequency determined by the user using step_freq) will be saved at experiments/checkpoints folder. And the **validation set** predictions and labels will be saved under experiments/outputs folder.
 
+**nparam**
 * `--cuda`: enables cuda
 
 * `--ngpu`: number of GPUs to use (default=1)
@@ -157,12 +157,15 @@ The model checkpoints at every epoch and steps (frequency determined by the user
 
 ### 5. Test model:
 
-Run ```test.py``` to evaluate a specific model on the test/validation data, ```run_test.sh``` is the associated sbatch file. Following is an example for calling run_job.sh that accept two arguments (1.Arguments for Parser , 2.experiment name (test)). 
+Run ```test.py``` to evaluate a specific model on the test/validation data, ```run_test.sh``` is the associated sbatch file. Inside the run_test.sh, set parameteres: nexp, output and param as described below. 
 
-**sbatch run_test.sh "--data='brain-kidney-lung'  --model='step_99000.pth'  --root_dir=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lungTilesSorted/ --num_class=7 --tile_dict_path=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lung_FileMappingDict.p --val=test" test**
+* `nexp` = "dir/experiments/exp" : same exp directory set for the training
 
-* `--data`: Data to train on (lung/breast/kidney)
+* `output` = "dir/logs/log_test.log" : name the test log with "*_test.log"
 
+* `nparam` = "--model='epoch_2.pth' --root_dir=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/LungTilesSorted/ --num_class=7 --tile_dict_path=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/Lung_FileMappingDict.p --val=test"
+
+**nparam**
 * `--model`: Name of model to test, e.g. `epoch_10.pth`
 
 * `--num_class`: number of classes (default=2)
