@@ -39,5 +39,3 @@ nexp="/gpfs/scratch/bilals01/test-repo/experiments/exp2"
 output="/gpfs/scratch/bilals01/test-repo/logs/log_test.log" 
 
 python3 -u /gpfs/scratch/bilals01/test-repo/PathCNN/test.py $nparam --experiment $nexp > $output
-
-

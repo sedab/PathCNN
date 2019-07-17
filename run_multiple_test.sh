@@ -36,7 +36,7 @@ nparam="--root_dir=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/Lun
 
 nexp="/gpfs/scratch/bilals01/test-repo/experiments/exp2"
 
-output="/gpfs/scratch/bilals01/test-repo/logs/log_test_multiple.log"
+out="/gpfs/scratch/bilals01/test-repo/logs"
 
 # check if next checkpoint available
 declare -i count=0
@@ -44,6 +44,16 @@ declare -i step=1
 
 while true; do
     echo count
-    python3 -u test.py  --experiment $nexp  --model "epoch_$count.pth" $nparam > $output
+    PathToEpoch="${nexp}/checkpoints/"
+    Cmodel="epoch_$count.pth"
+    output="${out}/test_log_${Cmodel}.log"
+    echo $PathToEpoch
+    echo $Cmodel
+    echo $output
+    if [ -f $PathToEpoch/$Cmodel ]; then
+    python3 -u test.py  --experiment $nexp  --model $Cmodel $nparam > $output
+    else
+        break
+    fi
     count = `expr "$count" + "$step"`
 done

@@ -52,6 +52,7 @@ parser.add_argument('--root_dir', type=str, default='<ROOT_PATH><CANCER_TYPE>Til
 parser.add_argument('--num_class', type=int, default=2, help='number of classes ')
 parser.add_argument('--tile_dict_path', type=str, default='"<ROOT_PATH><CANCER_TYPE>_FileMappingDict.p', help='Tile dictinory path')
 parser.add_argument('--step_freq', type=int, default=100000000, help='save the checkpoint at every step_freq steps')
+parser.add_argument('--calc_val_auc', action='store_true', help='trigger validation auc calculatio at each epoch (boolean)')
 
 opt = parser.parse_args()
 
@@ -446,30 +447,25 @@ for epoch in range(opt.niter+1):
                 #experiment.log_metric("{0} AUC".format(k), v)
                 print('%s AUC: %0.4f' % (k, v))
 
-
-
-    print(time.time())
-    # Get validation AUC once per epoch
-    val_predictions, val_labels = aggregate(data['valid'].filenames, method=opt.method)
-    data_ = np.column_stack((np.asarray(val_predictions),np.asarray(val_labels)))
-    data_.dump(open('{0}/outputs/pred_label_avg_epoch_{1}.npy'.format(opt.experiment,str(epoch)), 'wb'))
+    #save the checkpoint at every epoch
     torch.save(model.state_dict(), '{0}/checkpoints/epoch_{1}.pth'.format(opt.experiment, str(epoch)))
 
-    roc_auc = get_auc('{0}/images/{1}.jpg'.format(opt.experiment, epoch),
+    #print(time.time())
+    # Get validation AUC once per epoch
+    if opt.calc_val_auc:
+    	val_predictions, val_labels = aggregate(data['valid'].filenames, method=opt.method)
+    	data_ = np.column_stack((np.asarray(val_predictions),np.asarray(val_labels)))
+    	data_.dump(open('{0}/outputs/pred_label_avg_epoch_{1}.npy'.format(opt.experiment,str(epoch)), 'wb'))
+
+    	roc_auc = get_auc('{0}/images/{1}.jpg'.format(opt.experiment, epoch),
                       val_predictions, val_labels, classes = range(num_classes))
 
-    for k, v in roc_auc.items():
+        for k, v in roc_auc.items():
+            if k in range(num_classes):
+                k = classes[k]
 
-        if k in range(num_classes):
-            k = classes[k]
-
-        #experiment.log_metric("{0} AUC".format(k), v)
-        print('%s AUC: %0.4f' % (k, v))
-
-    # Save model if best macro AUC
-    #if roc_auc['macro'] > best_AUC:
-    #torch.save(model.state_dict(), 'experiments/{0}/epoch_{1}.pth'.format(opt.experiment, epoch))
-    best_AUC = roc_auc['macro']
+            #experiment.log_metric("{0} AUC".format(k), v)
+            print('%s AUC: %0.4f' % (k, v))
 
     # Stop training if no progress on AUC is being made
     if opt.earlystop:
