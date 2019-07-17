@@ -389,7 +389,7 @@ start = time.time()
 #total=0
 
 print(time.time())
-for epoch in range(opt.niter+1):
+for epoch in range(1,opt.niter+1):
     data_iter = iter(loaders['train'])
     i = 0
     
