@@ -204,21 +204,21 @@ model.load_state_dict(state_dict)
 predictions, labels = aggregate(test_data.filenames, method='max')
 
 data = np.column_stack((np.asarray(predictions),np.asarray(labels)))
-data.dump(open('{0}/outputs/test_pred_label_max_{1}.npy'.format(opt.experiment,opt.model), 'wb'))
+data.dump(open('{0}/outputs/{1}_pred_label_max_{2}.npy'.format(opt.experiment,opt.val,opt.model), 'wb'))
 
 #This can be used if need to print the auc and save the roc curve automatically
 
-roc_auc  = get_auc('{0}/images/test_AUC_max_{1}.jpg'.format(opt.experiment,opt.model),
+roc_auc  = get_auc('{0}/images/{1}_AUC_max_{2}.jpg'.format(opt.experiment,opt.val,opt.model),
                    predictions, labels, classes = range(num_classes))
 print('Max method:')
 print(roc_auc)
 
 predictions, labels = aggregate(test_data.filenames, method='average')
 data = np.column_stack((np.asarray(predictions),np.asarray(labels)))
-data.dump(open('{0}/outputs/test_pred_label_avg_{1}.npy'.format(opt.experiment,opt.model), 'wb'))
+data.dump(open('{0}/outputs/{1}_pred_label_avg_{2}.npy'.format(opt.experiment,opt.val,opt.model), 'wb'))
 
 #This can be used if need to print the auc and save the roc curve automatically
-roc_auc  = get_auc('{0}/images/test_AUC_avg_{1}.jpg'.format(opt.experiment,opt.model),
+roc_auc  = get_auc('{0}/images/{1}_AUC_avg_{2}.jpg'.format(opt.experiment,opt.val,opt.model),
                    predictions, labels, classes = range(num_classes))
 print('Average method:')
 print(roc_auc)

@@ -436,11 +436,11 @@ for epoch in range(opt.niter+1):
             val_predictions, val_labels = aggregate(data['valid'].filenames, method=opt.method)
 
             data_ = np.column_stack((np.asarray(val_predictions),np.asarray(val_labels)))
-            data_.dump(open('{0}/outputs/pred_label_avg_{0}_step_{1}.npy'.format(opt.experiment,str(ii)), 'wb'))
+            data_.dump(open('{0}/outputs/val_pred_label_avg_{0}_step_{1}.npy'.format(opt.experiment,str(ii)), 'wb'))
             torch.save(model.state_dict(), '{0}/checkpoints/step_{1}.pth'.format(opt.experiment, str(ii)))           
             print('validation scores:')
 
-            roc_auc = get_auc('{0}/images/{1}.jpg'.format(opt.experiment,epoch), val_predictions, val_labels, classes = range(num_classes))
+            roc_auc = get_auc('{0}/images/val_roc_step_{1}.jpg'.format(opt.experiment,epoch), val_predictions, val_labels, classes = range(num_classes))
             for k, v in roc_auc.items(): 
                 if k in range(num_classes):
                     k = classes[k] 
@@ -455,9 +455,9 @@ for epoch in range(opt.niter+1):
     if opt.calc_val_auc:
     	val_predictions, val_labels = aggregate(data['valid'].filenames, method=opt.method)
     	data_ = np.column_stack((np.asarray(val_predictions),np.asarray(val_labels)))
-    	data_.dump(open('{0}/outputs/pred_label_avg_epoch_{1}.npy'.format(opt.experiment,str(epoch)), 'wb'))
+    	data_.dump(open('{0}/outputs/val_pred_label_avg_epoch_{1}.npy'.format(opt.experiment,str(epoch)), 'wb'))
 
-    	roc_auc = get_auc('{0}/images/{1}.jpg'.format(opt.experiment, epoch),
+    	roc_auc = get_auc('{0}/images/val_roc_epoch_{1}.jpg'.format(opt.experiment, epoch),
                       val_predictions, val_labels, classes = range(num_classes))
 
         for k, v in roc_auc.items():
