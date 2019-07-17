@@ -103,7 +103,7 @@ Run `train.py` to train with our CNN architecture. sbatch file `run_job.sh` is p
 
 * `nparam` = "--cuda  --augment --dropout=0.1 --nonlinearity='leaky' --init=‘xavier’ --root_dir=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lungTilesSorted/ --num_class=7 --tile_dict_path=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lung_FileMappingDict.p"
 
-The model checkpoints at every epoch and steps (frequency determined by the user using step_freq) will be saved at experiments/checkpoints folder. And the **validation set** predictions and labels will be saved under experiments/outputs folder.
+The model checkpoints at every epoch and steps (frequency determined by the user using step_freq) will be saved at experiments/checkpoints folder. And the **validation set** predictions and labels will be saved under experiments/outputs folder if calc_val_auc argument is used.
 
 **nparam:**
 * `--cuda`: enables cuda
@@ -154,6 +154,7 @@ The model checkpoints at every epoch and steps (frequency determined by the user
 
 * `--step_freq`: how often to save the results and the checkpoints (default=100000000; won't save any steps, as this number set very high)
 
+* `--calc_val_auc`: save validation auc calculatio at each epoch 
 
 ### 5. Test model:
 
