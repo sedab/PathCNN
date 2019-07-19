@@ -39,11 +39,11 @@ nexp="/gpfs/scratch/bilals01/test-repo/experiments/exp2"
 out="/gpfs/scratch/bilals01/test-repo/logs"
 
 # check if next checkpoint available
-declare -i count=1
+declare -i count=0
 declare -i step=1 
 
 while true; do
-    echo count
+    echo $count
     PathToEpoch="${nexp}/checkpoints/"
     Cmodel="epoch_$count.pth"
     output="${out}/test_log_${Cmodel}.log"
@@ -51,9 +51,9 @@ while true; do
     echo $Cmodel
     echo $output
     if [ -f $PathToEpoch/$Cmodel ]; then
-    python3 -u test.py  --experiment $nexp  --model $Cmodel $nparam > $output
+        python3 -u test.py  --experiment $nexp  --model $Cmodel $nparam > $output
     else
         break
     fi
-    count = `expr "$count" + "$step"`
+    count=`expr "$count" + "$step"`
 done
