@@ -23,6 +23,8 @@ from utils.auc import *
 from utils import new_transforms
 import argparse
 import random
+import torchvision.models as models
+
 
 """
 Options for training
@@ -38,7 +40,8 @@ parser.add_argument('--dropout', type=float, default=0.5, help='probability of d
 parser.add_argument('--beta1', type=float, default=0.5, help='beta1 for adam, default=0.5')
 parser.add_argument('--cuda'  , action='store_true', help='enables cuda')
 parser.add_argument('--ngpu'  , type=int, default=1, help='number of GPUs to use')
-parser.add_argument('--model', default='', help="path to model (to continue training)")
+parser.add_argument('--model_type'  ,  default='PathCNN', help='choose the model to train with: PathCNN, alexnet,vgg16')
+parser.add_argument('--model_cp', default='', help="path to model (to continue training)")
 parser.add_argument('--experiment', default=None, help='where to store samples and models')
 parser.add_argument('--augment', action='store_true', help='whether to use data augmentation or not')
 parser.add_argument('--optimizer',type=str, default='Adam',  help='optimizer: Adam, SGD or RMSprop; default: Adam')
@@ -65,6 +68,7 @@ root_dir = str(opt.root_dir)
 num_classes = int(opt.num_class)
 tile_dict_path = str(opt.tile_dict_path)
 step_freq = int(opt.step_freq)
+model_type = str(opt.model_type)
 
 """
 Save experiment 
@@ -206,7 +210,18 @@ class cancer_CNN(nn.Module):
 ###############################################################################
 
 # Create model objects
-model = cancer_CNN(nc, imgSize, ngpu)
+if(model_type=='alexnet'):
+    print('using '+ model_type)
+    model = models.alexnet()
+
+elif(model_type=='vgg16'):
+    print('using '+ model_type)
+    model = models.vgg16()
+
+else:
+    print('using '+ model_type)
+    model = cancer_CNN(nc, imgSize, ngpu)
+
 init_model(model)
 model.train()
 
