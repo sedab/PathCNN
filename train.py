@@ -73,11 +73,11 @@ Save experiment
 if opt.experiment is None:
     opt.experiment = 'samples'
 
-#os.system('mkdir experiments')
-os.system('mkdir {0}'.format(opt.experiment))
-os.system('mkdir {0}/images'.format(opt.experiment))
-os.system('mkdir {0}/checkpoints'.format(opt.experiment))
-os.system('mkdir {0}/outputs'.format(opt.experiment))
+os.system('mkdir experiments')
+os.system('mkdir experiments/{0}'.format(opt.experiment))
+os.system('mkdir experiments/{0}/images'.format(opt.experiment))
+os.system('mkdir experiments/{0}/checkpoints'.format(opt.experiment))
+os.system('mkdir experiments/{0}/outputs'.format(opt.experiment))
 opt.manualSeed = random.randint(1, 10000) # fix seed
 print("Random Seed: ", opt.manualSeed)
 random.seed(opt.manualSeed)
@@ -453,12 +453,11 @@ for epoch in range(1,opt.niter+1):
     #print(time.time())
     # Get validation AUC once per epoch
     if opt.calc_val_auc:
-    	val_predictions, val_labels = aggregate(data['valid'].filenames, method=opt.method)
-    	data_ = np.column_stack((np.asarray(val_predictions),np.asarray(val_labels)))
-    	data_.dump(open('{0}/outputs/val_pred_label_avg_epoch_{1}.npy'.format(opt.experiment,str(epoch)), 'wb'))
+        val_predictions, val_labels = aggregate(data['valid'].filenames, method=opt.method)
+        data_ = np.column_stack((np.asarray(val_predictions),np.asarray(val_labels)))
+        data_.dump(open('{0}/outputs/val_pred_label_avg_epoch_{1}.npy'.format(opt.experiment,str(epoch)), 'wb'))
 
-    	roc_auc = get_auc('{0}/images/val_roc_epoch_{1}.jpg'.format(opt.experiment, epoch),
-                      val_predictions, val_labels, classes = range(num_classes))
+        roc_auc = get_auc('{0}/images/val_roc_epoch_{1}.jpg'.format(opt.experiment, epoch),val_predictions, val_labels, classes = range(num_classes))
 
         for k, v in roc_auc.items():
             if k in range(num_classes):
