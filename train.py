@@ -73,11 +73,10 @@ Save experiment
 if opt.experiment is None:
     opt.experiment = 'samples'
 
-os.system('mkdir experiments')
-os.system('mkdir experiments/{0}'.format(opt.experiment))
-os.system('mkdir experiments/{0}/images'.format(opt.experiment))
-os.system('mkdir experiments/{0}/checkpoints'.format(opt.experiment))
-os.system('mkdir experiments/{0}/outputs'.format(opt.experiment))
+os.system('mkdir {0}'.format(opt.experiment))
+os.system('mkdir {0}/images'.format(opt.experiment))
+os.system('mkdir {0}/checkpoints'.format(opt.experiment))
+os.system('mkdir {0}/outputs'.format(opt.experiment))
 opt.manualSeed = random.randint(1, 10000) # fix seed
 print("Random Seed: ", opt.manualSeed)
 random.seed(opt.manualSeed)
@@ -385,8 +384,8 @@ best_AUC = 0.0
 
 print('Starting training')
 start = time.time()
-#correc=0
-#total=0
+local_time = time.ctime(start)
+print(local_time)
 
 print(time.time())
 for epoch in range(1,opt.niter+1):
@@ -396,10 +395,6 @@ for epoch in range(1,opt.niter+1):
     if opt.decay_lr:
         adjust_learning_rate(optimizer, epoch)
         print("Epoch %d :lr = %f" % (epoch, optimizer.state_dict()['param_groups'][0]['lr']))    
-
-    #correc=0
-    # total=0
-
     while i < len(loaders['train']):
         model.train()
         img, label = data_iter.next()
@@ -422,7 +417,7 @@ for epoch in range(1,opt.niter+1):
         # Zero gradients then backward pass
         optimizer.zero_grad()
         train_loss.backward()
-       
+      
         correc=0
         total=0
 
@@ -436,7 +431,7 @@ for epoch in range(1,opt.niter+1):
             val_predictions, val_labels = aggregate(data['valid'].filenames, method=opt.method)
 
             data_ = np.column_stack((np.asarray(val_predictions),np.asarray(val_labels)))
-            data_.dump(open('{0}/outputs/val_pred_label_avg_{0}_step_{1}.npy'.format(opt.experiment,str(ii)), 'wb'))
+            data_.dump(open('{0}/outputs/val_pred_label_avg_step_{1}.npy'.format(opt.experiment,str(ii)), 'wb'))
             torch.save(model.state_dict(), '{0}/checkpoints/step_{1}.pth'.format(opt.experiment, str(ii)))           
             print('validation scores:')
 
@@ -474,6 +469,11 @@ for epoch in range(1,opt.niter+1):
         if stop_training: 
             print("Early stop triggered")
             break
+
+
+    epoch_time = time.time()
+    local_time = time.ctime(epoch_time)
+    print(local_time)
 
 # Final evaluation
 print('Finished training, best AUC: %0.4f' % (best_AUC))

@@ -36,6 +36,6 @@ nparam="--model=epoch_2.pth --root_dir=/gpfs/data/abl/deepomics/tsirigoslab/hist
 
 nexp="/gpfs/scratch/bilals01/test-repo/experiments/exp2"
 
-output="/gpfs/scratch/bilals01/test-repo/logs/log_test.log" 
+output="/gpfs/scratch/bilals01/test-repo/logs/log_test2.log" 
 
 python3 -u /gpfs/scratch/bilals01/test-repo/PathCNN/test.py $nparam --experiment $nexp > $output
