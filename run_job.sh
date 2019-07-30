@@ -32,7 +32,7 @@ echo "Running on $SLURM_NPROCS processors."
 module purge
 module load python/gpu/3.6.5 
 
-nparam="--cuda  --augment --dropout=0.1 --init='leaky' --root_dir=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/LungTilesSorted/ --num_class=3 --tile_dict_path=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/Lung_FileMappingDict.p" 
+nparam="--cuda  --augment --dropout=0.1 --nonlinearity='leaky' --init='xavier'  --root_dir=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/LungTilesSorted/ --num_class=3 --tile_dict_path=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/Lung_FileMappingDict.p" 
 
 nexp="/gpfs/scratch/bilals01/test-repo/experiments/exp5"
 
