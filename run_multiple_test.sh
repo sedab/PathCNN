@@ -39,7 +39,7 @@ nexp="/gpfs/scratch/bilals01/test-repo/experiments/exp2"
 out="/gpfs/scratch/bilals01/test-repo/logs"
 
 # check if next checkpoint available
-declare -i count=0
+declare -i count=1
 declare -i step=1 
 
 while true; do
