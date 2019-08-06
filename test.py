@@ -16,6 +16,8 @@ from utils.dataloader import *
 #from utils.auc_test import *
 from utils.auc import *
 from utils import new_transforms
+import time
+import torchvision.models as models
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--experiment', default='', help="name of experiment to test")
@@ -24,16 +26,16 @@ parser.add_argument('--root_dir', type=str, default='<ROOT_PATH><CANCER_TYPE>Til
 parser.add_argument('--num_class', type=int, default=2, help='number of classes ')
 parser.add_argument('--tile_dict_path', type=str, default='"<ROOT_PATH><CANCER_TYPE>_FileMappingDict.p', help='Tile dictinory path')
 parser.add_argument('--val', type=str, default='test', help='validation set')
+parser.add_argument('--imgSize', type=int, default=299, help='the height / width of the image to network')
+parser.add_argument('--model_type',type=str,  default='PathCNN', help='choose the model to train with: PathCNN, alexnet,vgg16')
 
 opt = parser.parse_args()
 
 root_dir = str(opt.root_dir)
 num_classes = int(opt.num_class)
 tile_dict_path = str(opt.tile_dict_path)
-
 test_val = str(opt.val)
-
-imgSize = 299
+imgSize = int(opt.imgSize)
 
 transform = transforms.Compose([new_transforms.Resize((imgSize,imgSize)),
                                 transforms.ToTensor(),
@@ -144,62 +146,18 @@ def aggregate(file_list, method):
 
     return np.array(predictions), np.array(true_labels)
 
-class BasicConv2d(nn.Module):
+# Create model objects
+if(opt.model_type == 'alexnet'):
+    model = models.alexnet(num_classes=3)
+elif(opt.model_type == 'vgg16'):
+    model = models.vgg16(num_classes=3)
 
-    def __init__(self, in_channels, out_channels, pool, **kwargs):
-        super(BasicConv2d, self).__init__()
-
-        self.pool = pool
-        self.conv = nn.Conv2d(in_channels, out_channels, **kwargs)
-        self.bn = nn.BatchNorm2d(out_channels, eps=0.001)
-        self.relu = nn.LeakyReLU()
-        
-        self.dropout = nn.Dropout(p=0.1)
-
-    def forward(self, x):
-        x = self.conv(x)
-
-        if self.pool:
-            x = F.max_pool2d(x, 2)
-        
-        x = self.relu(x)
-        x = self.bn(x)
-        x = self.dropout(x)
-        return x
-
-# Define model
-class cancer_CNN(nn.Module):
-    def __init__(self, nc, imgSize, ngpu):
-        super(cancer_CNN, self).__init__()
-        self.nc = nc
-        self.imgSize = imgSize
-        self.ngpu = ngpu
-        #self.data = opt.data
-        self.conv1 = BasicConv2d(nc, 16, False, kernel_size=5, padding=1, stride=2, bias=True)
-        self.conv2 = BasicConv2d(16, 32, False, kernel_size=3, bias=True)
-        self.conv3 = BasicConv2d(32, 64, True, kernel_size=3, padding=1, bias=True)
-        self.conv4 = BasicConv2d(64, 64, True, kernel_size=3, padding=1, bias=True)
-        self.conv5 = BasicConv2d(64, 128, True, kernel_size=3, padding=1, bias=True)
-        self.conv6 = BasicConv2d(128, 64, True, kernel_size=3, padding=1, bias=True)
-        self.linear = nn.Linear(5184, num_classes)
-
-    def forward(self, x):
-        x = self.conv1(x)
-        x = self.conv2(x)
-        x = self.conv3(x)
-        x = self.conv4(x)
-        x = self.conv5(x)
-        x = self.conv6(x)
-        x = x.view(x.size(0), -1)
-        x = self.linear(x)
-        return x
-
-model = cancer_CNN(3, imgSize, 1)
 model.cuda()
 
 model_path = opt.experiment + '/checkpoints/' + opt.model
 state_dict = torch.load(model_path)
 model.load_state_dict(state_dict)
+
 
 predictions, labels = aggregate(test_data.filenames, method='max')
 
@@ -213,7 +171,23 @@ roc_auc  = get_auc('{0}/images/{1}_AUC_max_{2}.jpg'.format(opt.experiment,opt.va
 print('Max method:')
 print(roc_auc)
 
+
+
+
+print('Starting aggregate')
+start = time.time()
+local_time = time.ctime(start)
+print(local_time)
+
 predictions, labels = aggregate(test_data.filenames, method='average')
+
+print('end of aggregate')
+start = time.time()
+local_time = time.ctime(start)
+print(local_time)
+
+
+
 data = np.column_stack((np.asarray(predictions),np.asarray(labels)))
 data.dump(open('{0}/outputs/{1}_pred_label_avg_{2}.npy'.format(opt.experiment,opt.val,opt.model), 'wb'))
 

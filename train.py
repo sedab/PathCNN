@@ -222,15 +222,22 @@ else:
     print('using '+ model_type)
     model = cancer_CNN(nc, imgSize, ngpu)
 
+print('before init')
+print(model)
+
 init_model(model)
 model.train()
 
 criterion = nn.CrossEntropyLoss()
 
 # Load checkpoint models if needed
-if opt.model != '': 
-    model.load_state_dict(torch.load(opt.model))
+if opt.model_cp != '': 
+    model.load_state_dict(torch.load(opt.model_cp))
+
+print('model')
 print(model)
+print('alexnet')
+print(models.alexnet())
 
 if opt.cuda:
     model.cuda()
@@ -433,8 +440,7 @@ for epoch in range(1,opt.niter+1):
         target_label = Variable(label)
 
         train_loss = criterion(model(input_img), target_label)
-        #print(model(input_img)[0])
-        # Zero gradients then backward pass
+        
         optimizer.zero_grad()
         train_loss.backward()
        
@@ -468,11 +474,11 @@ for epoch in range(1,opt.niter+1):
     #print(time.time())
     # Get validation AUC once per epoch
     if opt.calc_val_auc:
-    	val_predictions, val_labels = aggregate(data['valid'].filenames, method=opt.method)
-    	data_ = np.column_stack((np.asarray(val_predictions),np.asarray(val_labels)))
-    	data_.dump(open('{0}/outputs/val_pred_label_avg_epoch_{1}.npy'.format(opt.experiment,str(epoch)), 'wb'))
+        val_predictions, val_labels = aggregate(data['valid'].filenames, method=opt.method)
+        data_ = np.column_stack((np.asarray(val_predictions),np.asarray(val_labels)))
+        data_.dump(open('{0}/outputs/val_pred_label_avg_epoch_{1}.npy'.format(opt.experiment,str(epoch)), 'wb'))
 
-    	roc_auc = get_auc('{0}/images/val_roc_epoch_{1}.jpg'.format(opt.experiment, epoch),
+        roc_auc = get_auc('{0}/images/val_roc_epoch_{1}.jpg'.format(opt.experiment, epoch),
                       val_predictions, val_labels, classes = range(num_classes))
 
         for k, v in roc_auc.items():
