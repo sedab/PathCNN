@@ -3,7 +3,7 @@
 #SBATCH --job-name=train
 ##SBATCH --gres=gpu:p100:1
 #SBATCH --gres=gpu:1
-#SBATCH --time=48:00:00
+#SBATCH --time=72:00:00
 #SBATCH --mem=15GB
 #SBATCH --output=outputs/%A.out
 #SBATCH --error=outputs/%A.err
@@ -19,14 +19,15 @@ echo "Running on hosts: $SLURM_NODELIST"
 echo "Running on $SLURM_NNODES nodes."
 echo "Running on $SLURM_NPROCS processors."
 
-nparam="--root_dir=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds2TilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds2_FileMappingDict.p --val=test --imgSize=224 --model_type=alexnet"
+nparam="--root_dir=/beegfs/sb3923/DeepCancer/alldata/LungTilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/LungTilesSorted/Lung_FileMappingDict.p --val=test --imgSize=227 --model_type=alexnet"
+#nparam="--root_dir=/beegfs/sb3923/DeepCancer/alldata/LungTilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/LungTilesSorted/Lung_FileMappingDict.p --val=valid --imgSize=224 --model_type=vgg16"
 
-nexp="/scratch/sb3923/PathCNN_data/experiments/train_ds1_alexnet"
+#nexp="/scratch/sb3923/PathCNN_data/experiments/train_ds1_alexnet"
 #nexp="/scratch/sb3923/PathCNN_data/experiments/train_ds1_vgg16"
 #nexp="/scratch/sb3923/PathCNN_data/experiments/train_ds2_alexnet"
 #nexp="/scratch/sb3923/PathCNN_data/experiments/train_ds2_vgg16"
-#nexp="/scratch/sb3923/PathCNN_data/experiments/train_ds3_alexnet"
-#nexp="/scratch/sb3923/PathCNN_data/experiments/train_ds3_vgg16"
+nexp="/scratch/sb3923/PathCNN_data/experiments/train2_ds3_alexnet"
+#nexp="/scratch/sb3923/PathCNN_data/experiments/train2_ds3_vgg16"
 #nexp="/scratch/sb3923/PathCNN_data/experiments/train_full_alexnet"
 #nexp="/scratch/sb3923/PathCNN_data/experiments/train_full_vgg16"
 
@@ -40,7 +41,7 @@ while true; do
     echo count
     PathToEpoch="${nexp}/checkpoints/"
     Cmodel="epoch_$count.pth"
-    output="${out}/test_log_${Cmodel}.log"
+    output="${out}/log2_alexnet_ds3_${Cmodel}.log"
     echo $PathToEpoch
     echo $Cmodel
     echo $output

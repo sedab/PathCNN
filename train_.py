@@ -142,15 +142,19 @@ if opt.init not in ['normal', 'xavier', 'kaiming']:
 def init_model(model):
     for m in model.modules():
         if isinstance(m,nn.Conv2d):
-            #if opt.init == 'xavier':
-            #    m.weight.data = init.xavier_normal(m.weight.data)
-            #elif opt.init == 'kaiming':
-            m.weight.data = init.kaiming_normal(m.weight.data)
-            #else:
-            #    m.weight.data.normal_(-0.1, 0.1)
+            if opt.init == 'xavier':
+                print('xavier initilization')
+                m.weight.data = init.xavier_normal(m.weight.data)
+            elif opt.init == 'kaiming':
+                print('kaiming initilization')
+                m.weight.data = init.kaiming_normal(m.weight.data)
+            else:
+                print('normal initilization')
+                m.weight.data.normal_(-0.1, 0.1)
             
         elif isinstance(m,nn.BatchNorm2d):
             m.weight.data.normal_(-0.1, 0.1)
+
 
 ###############################################################################
 
@@ -158,17 +162,13 @@ def init_model(model):
 if(opt.model_type == 'alexnet'):
     print('using '+ modeltype)
     model = models.alexnet(num_classes=3)
-    #optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=0.0005)
-    optimizer = optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
-    #init_model(model)
 
 elif(opt.model_type == 'vgg16'):
     print('using '+ modeltype)
     model = models.vgg16(num_classes=3)
-    optimizer = optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
 
 model.train()
-
+init_model(model)
 
 print('model')
 print(model)
@@ -178,6 +178,20 @@ if opt.cuda:
 
 
 criterion = nn.CrossEntropyLoss()
+
+
+# Set up optimizer
+if opt.optimizer == "Adam":
+    print('using Adam optimizer')
+    optimizer = optim.Adam(model.parameters(), lr=opt.lr, betas=(opt.beta1, 0.999))
+elif opt.optimizer == "RMSprop":
+    print('using RMSprop optimizer')
+    optimizer = optim.RMSprop(model.parameters(), lr = opt.lr)
+elif opt.optimizer == "SGD": 
+    print('SGD optimizer')
+    optimizer = optim.SGD(model.parameters(), lr = opt.lr)
+else: 
+    raise ValueError('Optimizer not found. Accepted "Adam", "SGD" or "RMSprop"')
 
 
 ###############################################################################

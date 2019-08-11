@@ -52,7 +52,7 @@ parser.add_argument('--earlystop', action='store_true', help='trigger early stop
 parser.add_argument('--method', type=str, default='average', help='aggregation prediction method (max, average)')
 parser.add_argument('--decay_lr', action='store_true', help='activate decay learning rate function')
 parser.add_argument('--root_dir', type=str, default='<ROOT_PATH><CANCER_TYPE>TilesSorted/', help='Data directory .../dataTilesSorted/')
-parser.add_argument('--num_class', type=int, default=2, help='number of classes ')
+parser.add_argument('--num_class', type=int, default=3, help='number of classes ')
 parser.add_argument('--tile_dict_path', type=str, default='"<ROOT_PATH><CANCER_TYPE>_FileMappingDict.p', help='Tile dictinory path')
 parser.add_argument('--step_freq', type=int, default=100000000, help='save the checkpoint at every step_freq steps')
 parser.add_argument('--calc_val_auc', action='store_true', help='trigger validation auc calculatio at each epoch (boolean)')
@@ -84,6 +84,9 @@ os.system('mkdir {0}/checkpoints'.format(opt.experiment))
 os.system('mkdir {0}/outputs'.format(opt.experiment))
 opt.manualSeed = random.randint(1, 10000) # fix seed
 print("Random Seed: ", opt.manualSeed)
+#print("Random Seed: ", 7928)
+#random.seed(7928)
+#torch.manual_seed(7928)
 random.seed(opt.manualSeed)
 torch.manual_seed(opt.manualSeed)
 
@@ -210,17 +213,7 @@ class cancer_CNN(nn.Module):
 ###############################################################################
 
 # Create model objects
-if(model_type=='alexnet'):
-    print('using '+ model_type)
-    model = models.alexnet()
-
-elif(model_type=='vgg16'):
-    print('using '+ model_type)
-    model = models.vgg16()
-
-else:
-    print('using '+ model_type)
-    model = cancer_CNN(nc, imgSize, ngpu)
+model = cancer_CNN(nc, imgSize, ngpu)
 
 print('before init')
 print(model)
@@ -234,21 +227,21 @@ criterion = nn.CrossEntropyLoss()
 if opt.model_cp != '': 
     model.load_state_dict(torch.load(opt.model_cp))
 
-print('model')
-print(model)
-print('alexnet')
-print(models.alexnet())
 
 if opt.cuda:
     model.cuda()
+    #print('model is cuda')
 
 # Set up optimizer
 if opt.optimizer == "Adam":
     optimizer = optim.Adam(model.parameters(), lr=opt.lr, betas=(opt.beta1, 0.999))
+    #print('optimizer: Adam')
 elif opt.optimizer == "RMSprop":
     optimizer = optim.RMSprop(model.parameters(), lr = opt.lr)
+    #print('optimizer RMSProp')
 elif opt.optimizer == "SGD": 
     optimizer = optim.SGD(model.parameters(), lr = opt.lr)
+    #print('optimizer SGD')
 else: 
     raise ValueError('Optimizer not found. Accepted "Adam", "SGD" or "RMSprop"')
 
@@ -438,7 +431,7 @@ for epoch in range(1,opt.niter+1):
 
         input_img = Variable(img)
         target_label = Variable(label)
-
+        
         train_loss = criterion(model(input_img), target_label)
         
         optimizer.zero_grad()
