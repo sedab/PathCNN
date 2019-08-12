@@ -33,21 +33,21 @@ echo "Running on $SLURM_NNODES nodes."
 echo "Running on $SLURM_NPROCS processors."
 
 
-nparam="--cuda --calc_val_auc  --augment --dropout=0.1  --imgSize=299 --model_type=alexnet --init=xavier --root_dir=/beegfs/sb3923/DeepCancer/alldata/LungTilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/LungTilesSorted/Lung_FileMappingDict.p" 
-#nparam="--cuda --calc_val_auc  --augment --dropout=0.1  --imgSize=224 --model_type=vgg16 --root_dir=/beegfs/sb3923/DeepCancer/alldata/LungTilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/LungTilesSorted/Lung_FileMappingDict.p"
+#nparam="--cuda --calc_val_auc  --augment --dropout=0.1  --imgSize=224 --model_type=alexnet --init=xavier --root_dir=/beegfs/sb3923/DeepCancer/alldata/LungTilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/LungTilesSorted/Lung_FileMappingDict.p" 
+nparam="--cuda --calc_val_auc  --augment --dropout=0.1  --imgSize=224 --model_type=vgg16 --root_dir=/beegfs/sb3923/DeepCancer/alldata/LungTilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/LungTilesSorted/Lung_FileMappingDict.p"
 
 
 #########for downsampling###########
-#nparam="--cuda --calc_val_auc  --augment --dropout=0.1 --imgSize=227 --model_type=alexnet --root_dir=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds1TilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds1_FileMappingDict.p"
+#nparam="--cuda --calc_val_auc  --augment --dropout=0.1 --imgSize=224 --model_type=alexnet --root_dir=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds1TilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds1_FileMappingDict.p"
 #nparam="--cuda --calc_val_auc  --augment --dropout=0.1  --imgSize=224 --model_type=vgg16 --root_dir=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds1TilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds1_FileMappingDict.p"
-#nparam="--cuda --calc_val_auc  --augment --dropout=0.1  --imgSize=227 --model_type=alexnet --root_dir=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds2TilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds2_FileMappingDict.p"
+#nparam="--cuda --calc_val_auc  --augment --dropout=0.1  --imgSize=224 --model_type=alexnet --root_dir=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds2TilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds2_FileMappingDict.p"
 #nparam="--cuda --calc_val_auc  --augment --dropout=0.1  --imgSize=224 --model_type=vgg16 --root_dir=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds2TilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds2_FileMappingDict.p"
-#nparam="--cuda --calc_val_auc --augment --dropout=0.1  --imgSize=227 --model_type=alexnet --root_dir=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds3TilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds3_FileMappingDict.p"
+#nparam="--cuda --calc_val_auc --augment --dropout=0.1  --imgSize=224 --model_type=alexnet --root_dir=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds3TilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds3_FileMappingDict.p"
 #nparam="--cuda --calc_val_auc --augment --dropout=0.1  --imgSize=224 --model_type=vgg16 --root_dir=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds3TilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds3_FileMappingDict.p"
 #______________________________________________________________#
 
-nexp="/scratch/sb3923/PathCNN_data/experiments/train_lung_full_alexnet"
-#nexp="/scratch/sb3923/PathCNN_data/experiments/train_lung_full_vgg16"
+#nexp="/scratch/sb3923/PathCNN_data/experiments/train_lung_full_alexnet"
+nexp="/scratch/sb3923/PathCNN_data/experiments/train_lung_full_vgg16"
 
 ##############for downsampling##########
 #nexp="/scratch/sb3923/PathCNN_data/experiments/train_ds1_alexnet"
@@ -60,8 +60,8 @@ nexp="/scratch/sb3923/PathCNN_data/experiments/train_lung_full_alexnet"
 
 
 
-output="/scratch/sb3923/PathCNN_data/logs/train_lung_full_alexnet.log" 
-#output="/scratch/sb3923/PathCNN_data/logs/train_lung_full_vgg16.log"
+#output="/scratch/sb3923/PathCNN_data/logs/train_lung_full_alexnet.log" 
+output="/scratch/sb3923/PathCNN_data/logs/train_lung_full_vgg16.log"
  
 
 ###########for downsampling##############
