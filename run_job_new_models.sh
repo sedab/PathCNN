@@ -33,7 +33,7 @@ echo "Running on $SLURM_NNODES nodes."
 echo "Running on $SLURM_NPROCS processors."
 
 
-#nparam="--cuda --calc_val_auc  --augment --dropout=0.1  --imgSize=224 --model_type=alexnet --init=xavier --root_dir=/beegfs/sb3923/DeepCancer/alldata/LungTilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/LungTilesSorted/Lung_FileMappingDict.p" 
+#nparam="--cuda --calc_val_auc  --augment --dropout=0.1  --imgSize=224 --model_type=alexnet --root_dir=/beegfs/sb3923/DeepCancer/alldata/LungTilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/LungTilesSorted/Lung_FileMappingDict.p" 
 nparam="--cuda --calc_val_auc  --augment --dropout=0.1  --imgSize=224 --model_type=vgg16 --root_dir=/beegfs/sb3923/DeepCancer/alldata/LungTilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/LungTilesSorted/Lung_FileMappingDict.p"
 
 

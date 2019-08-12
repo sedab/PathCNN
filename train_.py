@@ -168,7 +168,7 @@ elif(opt.model_type == 'vgg16'):
     model = models.vgg16(num_classes=3)
 
 model.train()
-init_model(model)
+#init_model(model)
 
 print('model')
 print(model)
