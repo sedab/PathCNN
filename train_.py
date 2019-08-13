@@ -44,7 +44,7 @@ parser.add_argument('--model_type',type=str,  default='PathCNN', help='choose th
 parser.add_argument('--model_cp', default='', help="path to model (to continue training)")
 parser.add_argument('--experiment', default=None, help='where to store samples and models')
 parser.add_argument('--augment', action='store_true', help='whether to use data augmentation or not')
-parser.add_argument('--optimizer',type=str, default='Adam',  help='optimizer: Adam, SGD or RMSprop; default: Adam')
+parser.add_argument('--optimizer',type=str, default='SGD',  help='optimizer: Adam, SGD or RMSprop; default: Adam')
 parser.add_argument('--metadata', action='store_true', help='whether to use metadata (default is not)')
 parser.add_argument('--init', type=str, default='normal', help='initialization method (normal, xavier, kaiming)')
 parser.add_argument('--nonlinearity', type=str, default='relu', help='nonlinearity to use (selu, prelu, leaky, relu)')

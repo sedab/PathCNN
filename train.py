@@ -56,6 +56,8 @@ parser.add_argument('--num_class', type=int, default=3, help='number of classes 
 parser.add_argument('--tile_dict_path', type=str, default='"<ROOT_PATH><CANCER_TYPE>_FileMappingDict.p', help='Tile dictinory path')
 parser.add_argument('--step_freq', type=int, default=100000000, help='save the checkpoint at every step_freq steps')
 parser.add_argument('--calc_val_auc', action='store_true', help='trigger validation auc calculatio at each epoch (boolean)')
+parser.add_argument('--model_version', type=str, default='6layers', help='pathcnn depth: 5layers, 7layers_v1 or 7layers_v2')
+
 
 opt = parser.parse_args()
 
@@ -184,6 +186,32 @@ class BasicConv2d(nn.Module):
         return x
 
 # Define model
+class cancer_CNN_5layers(nn.Module):
+    def __init__(self, nc, imgSize, ngpu):
+        super(cancer_CNN_5layers, self).__init__()
+        self.nc = nc
+        self.imgSize = imgSize
+        self.ngpu = ngpu
+        #self.data = opt.data
+        self.conv1 = BasicConv2d(nc, 16, False, kernel_size=5, padding=1, stride=2, bias=True)
+        self.conv2 = BasicConv2d(16, 32, False, kernel_size=3, bias=True)
+        self.conv3 = BasicConv2d(32, 64, True, kernel_size=3, padding=1, bias=True)
+        self.conv4 = BasicConv2d(64, 128, True, kernel_size=3, padding=1, bias=True)
+        self.conv5 = BasicConv2d(128, 64, True, kernel_size=3, padding=1, bias=True)
+        self.linear = nn.Linear(5184, num_classes)
+
+    def forward(self, x):
+        x = self.conv1(x)
+        x = self.conv2(x)
+        x = self.conv3(x)
+        x = self.conv4(x)
+        x = self.conv5(x)
+        x = x.view(x.size(0), -1)
+        x = self.linear(x)
+        return x
+
+
+#original
 class cancer_CNN(nn.Module):
     def __init__(self, nc, imgSize, ngpu):
         super(cancer_CNN, self).__init__()
@@ -210,10 +238,83 @@ class cancer_CNN(nn.Module):
         x = self.linear(x)
         return x
 
+
+
+class cancer_CNN_7layers_v1(nn.Module):
+    def __init__(self, nc, imgSize, ngpu):
+        super(cancer_CNN_7layers_v1, self).__init__()
+        self.nc = nc
+        self.imgSize = imgSize
+        self.ngpu = ngpu
+        #self.data = opt.data
+        self.conv1 = BasicConv2d(nc, 16, False, kernel_size=5, padding=1, stride=2, bias=True)
+        self.conv2 = BasicConv2d(16, 32, False, kernel_size=3, bias=True)
+        #new layer:
+        self.conv3 = BasicConv2d(32, 32, True, kernel_size=3, padding=1, bias=True)
+        self.conv4 = BasicConv2d(32, 64, True, kernel_size=3, padding=1, bias=True)
+        self.conv5 = BasicConv2d(64, 64, True, kernel_size=3, padding=1, bias=True)
+        self.conv6 = BasicConv2d(64, 128, True, kernel_size=3, padding=1, bias=True)
+        self.conv7 = BasicConv2d(128, 64, True, kernel_size=3, padding=1, bias=True)
+        self.linear = nn.Linear(5184, num_classes)
+
+    def forward(self, x):
+        x = self.conv1(x)
+        x = self.conv2(x)
+        x = self.conv3(x)
+        x = self.conv4(x)
+        x = self.conv5(x)
+        x = self.conv6(x)
+        x = self.conv7(x)
+        x = x.view(x.size(0), -1)
+        x = self.linear(x)
+        return x
+
+
+
+class cancer_CNN_7layers_v2(nn.Module):
+    def __init__(self, nc, imgSize, ngpu):
+        super(cancer_CNN_7layers_v2, self).__init__()
+        self.nc = nc
+        self.imgSize = imgSize
+        self.ngpu = ngpu
+        #self.data = opt.data
+        self.conv1 = BasicConv2d(nc, 16, False, kernel_size=5, padding=1, stride=2, bias=True)
+        self.conv2 = BasicConv2d(16, 32, False, kernel_size=3, bias=True)
+        self.conv3 = BasicConv2d(32, 64, True, kernel_size=3, padding=1, bias=True)
+        self.conv4 = BasicConv2d(64, 64, True, kernel_size=3, padding=1, bias=True)
+        self.conv5 = BasicConv2d(64, 128, True, kernel_size=3, padding=1, bias=True)
+        #addition
+        self.conv6 = BasicConv2d(128, 128, True, kernel_size=3, padding=1, bias=True)
+        self.conv7 = BasicConv2d(128, 64, True, kernel_size=3, padding=1, bias=True)
+        self.linear = nn.Linear(5184, num_classes)
+
+    def forward(self, x):
+        x = self.conv1(x)
+        x = self.conv2(x)
+        x = self.conv3(x)
+        x = self.conv4(x)
+        x = self.conv5(x)
+        x = self.conv6(x)
+        x = self.conv7(x)
+        x = x.view(x.size(0), -1)
+        x = self.linear(x)
+        return x
+
 ###############################################################################
 
 # Create model objects
-model = cancer_CNN(nc, imgSize, ngpu)
+if opt.model_version == '5layers':
+    print('5 layers')
+    model = cancer_CNN_5layers(nc, imgSize, ngpu)
+elif opt.model_version == '7layers_v1':
+    print('7 layers, v1')
+    model = cancer_CNN_7layers_v1(nc, imgSize, ngpu)
+elif opt.model_version == '7layers_v2':
+    print('7 layers, v2')
+    model = cancer_CNN_7layers_v2(nc, imgSize, ngpu)
+else:
+    print('6 layers')
+    model = cancer_CNN(nc, imgSize, ngpu)
 
 print('before init')
 print(model)
