@@ -39,8 +39,8 @@ transform = transforms.Compose([new_transforms.Resize((imgSize,imgSize)),
                                 transforms.ToTensor(),
                                 transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
-test_data = TissueData(root_dir, test_val, transform = transform, metadata=False)
-test_loader = torch.utils.data.DataLoader(test_data, batch_size=32, shuffle=False)
+test_data = TissueData(root_dir, test_val, transform = transform, metadata=False, test_valid=True)
+test_loader = torch.utils.data.DataLoader(test_data, batch_size=32, shuffle=False, num_workers=8)
 
 classes = test_data.classes
 class_to_idx = test_data.class_to_idx

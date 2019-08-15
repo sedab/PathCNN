@@ -18,10 +18,53 @@ def find_classes(dir):
     class_to_idx = {classes[i]: i for i in range(len(classes))}
     return classes, class_to_idx
 
-class TissueData(data.Dataset):
-    def __init__(self, root, dset_type, data='lung', transform=None, metadata=False):
+#get the train log file
+def get_class_coding(lf):
+    auc_new = []
+    phrase = "Class encoding:"
 
+    with open(lf, 'r+') as f:
+        lines = f.readlines()
+        for i in range(0, len(lines)):
+            line = lines[i]
+            #print(line)
+            if phrase in line:
+                class_encoding = lines[i + 1] # you may want to check that i < len(lines)
+                break
+                
+    class_encoding = class_encoding.strip('\n').strip('{').strip('}')
+    #print(class_encoding)
+            
+    class_names = []
+    class_codes = []
+
+    for c in class_encoding.split(','):
+        #print(c)
+        class_names.append(c.split(':')[0].replace("'", "").replace(" ", "").split('-')[-1])
+        class_codes.append(int(c.split(':')[1]))
+
+
+    class_coding = {}
+    for i in range(len(class_names)):
+        class_coding[class_codes[i]] = class_names[i]
+
+    return class_names, class_codes.sort(), class_coding
+
+
+class TissueData(data.Dataset):
+    def __init__(self, root, dset_type, data='lung', transform=None, metadata=False, test_valid=False):
+
+        
         classes, class_to_idx = find_classes(root)
+        #if test_valid:
+        #    c_names, c_codes, c_coding = get_class_coding
+        #    classes, class_to_idx = find_classes(root)
+        #    classes = 
+            #'Solid_Tissue_Normal': 0, 'TCGA-LUAD': 1, 'TCGA-LUSC': 2
+        #    class_to_idx = 
+        #else:
+        #    classes, class_to_idx = find_classes(root)
+            
 
         self.data = data
 
@@ -122,3 +165,5 @@ class TissueData(data.Dataset):
 
     def __len__(self):
         return len(self.datapoints)
+    
+    

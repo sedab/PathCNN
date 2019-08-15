@@ -1,11 +1,11 @@
 #!/bin/bash
-#SBATCH --partition=cpu_short
-#SBATCH --job-name=jupyter
-#SBATCH --mem-per-cpu=50GB
-#SBATCH --time=24:00:00
-#SBATCH --tasks=4
-#SBATCH --cpus-per-task=1
-#SBATCH --nodes=4
+#SBATCH --partition=gpu8_medium
+#SBATCH --job-name=train_PCNN
+#SBATCH --gres=gpu:1
+##SBATCH --output=outputs/rq_train1_%A_%a.out
+##SBATCH --error=outputs/rq_train1_%A_%a.err
+#SBATCH --mem=200GB
+
 
 # get tunneling info
 XDG_RUNTIME_DIR=""

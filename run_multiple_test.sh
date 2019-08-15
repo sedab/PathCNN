@@ -1,5 +1,7 @@
 #!/bin/bash
 #SBATCH --partition=gpu8_medium
+#SBATCH --ntasks=8
+#SBATCH --cpus-per-task=1
 #SBATCH --job-name=multiple_PCNN
 #SBATCH --gres=gpu:4
 #SBATCH --output=outputs/rq_train1_%A_%a.out

@@ -1,5 +1,7 @@
 #!/bin/bash
-#SBATCH --partition=gpu8_long
+#SBATCH --partition=gpu8_medium
+#SBATCH --ntasks=8
+#SBATCH --cpus-per-task=1
 #SBATCH --job-name=train_PCNN
 #SBATCH --gres=gpu:1
 #SBATCH --output=outputs/rq_train1_%A_%a.out
@@ -34,8 +36,8 @@ module load python/gpu/3.6.5
 
 nparam="--cuda  --augment --dropout=0.1 --nonlinearity=leaky --init=xavier  --root_dir=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/LungTilesSorted/ --num_class=3 --tile_dict_path=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/Lung_FileMappingDict.p" 
 
-nexp="/gpfs/scratch/bilals01/test-repo/experiments/exp5"
+nexp="/gpfs/scratch/bilals01/test-repo/experiments/exp6"
 
-output="/gpfs/scratch/bilals01/test-repo/logs/exp5_train.log" 
+output="/gpfs/scratch/bilals01/test-repo/logs/exp6_train.log" 
 
 python3 -u /gpfs/scratch/bilals01/test-repo/PathCNN/train.py $nparam --experiment $nexp > $output

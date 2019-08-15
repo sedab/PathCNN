@@ -108,11 +108,11 @@ loaders = {}
 
 for dset_type in ['train', 'valid']:
     if dset_type == 'train' and opt.augment:
-        data[dset_type] = TissueData(root_dir, dset_type, transform = augment, metadata=opt.metadata)
+        data[dset_type] = TissueData(root_dir, dset_type, transform = augment, metadata=opt.metadata, test_valid=False)
     else:
-        data[dset_type] = TissueData(root_dir, dset_type, transform = transform, metadata=opt.metadata)
+        data[dset_type] = TissueData(root_dir, dset_type, transform = transform, metadata=opt.metadata, test_valid=False)
 
-    loaders[dset_type] = torch.utils.data.DataLoader(data[dset_type], batch_size=opt.batchSize, shuffle=True)
+    loaders[dset_type] = torch.utils.data.DataLoader(data[dset_type], batch_size=opt.batchSize, shuffle=True, num_workers=8)
     print('Finished loading %s dataset: %s samples' % (dset_type, len(data[dset_type])))
 
 class_to_idx = data['train'].class_to_idx
@@ -424,13 +424,13 @@ for epoch in range(1,opt.niter+1):
         optimizer.step()
         
         print('[%d/%d][%d/%d] Training Loss: %f'
-               % (epoch, opt.niter, i, len(loaders['train']), train_loss.data[0]))
+               % (epoch, opt.niter, i, len(loaders['train']), train_loss.item()))
         ii=i+((epoch)*len(loaders['train']))
         #get validation AUC every step_freq 
         if ii % step_freq == 0:
             val_predictions, val_labels = aggregate(data['valid'].filenames, method=opt.method)
 
-            data_ = np.column_stack((np.asarray(val_predictions),np.asarray(val_labels)))
+            data_ = np.column_stack((data['valid'].filenames,np.asarray(val_predictions),np.asarray(val_labels)))
             data_.dump(open('{0}/outputs/val_pred_label_avg_step_{1}.npy'.format(opt.experiment,str(ii)), 'wb'))
             torch.save(model.state_dict(), '{0}/checkpoints/step_{1}.pth'.format(opt.experiment, str(ii)))           
             print('validation scores:')
@@ -449,7 +449,7 @@ for epoch in range(1,opt.niter+1):
     # Get validation AUC once per epoch
     if opt.calc_val_auc:
         val_predictions, val_labels = aggregate(data['valid'].filenames, method=opt.method)
-        data_ = np.column_stack((np.asarray(val_predictions),np.asarray(val_labels)))
+        data_ = np.column_stack((data['valid'].filenames,np.asarray(val_predictions),np.asarray(val_labels)))
         data_.dump(open('{0}/outputs/val_pred_label_avg_epoch_{1}.npy'.format(opt.experiment,str(epoch)), 'wb'))
 
         roc_auc = get_auc('{0}/images/val_roc_epoch_{1}.jpg'.format(opt.experiment, epoch),val_predictions, val_labels, classes = range(num_classes))

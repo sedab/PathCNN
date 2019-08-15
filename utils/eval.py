@@ -255,34 +255,3 @@ def get_auc(predictions, labels, class_names, classes=[0, 1, 2]):
     return fpr, tpr, roc_auc, cu, cl
 
 
-#get the train log file
-def get_class_coding(lf):
-    auc_new = []
-    phrase = "Class encoding:"
-
-    with open(lf, 'r+') as f:
-        lines = f.readlines()
-        for i in range(0, len(lines)):
-            line = lines[i]
-            #print(line)
-            if phrase in line:
-                class_encoding = lines[i + 1] # you may want to check that i < len(lines)
-                break
-                
-    class_encoding = class_encoding.strip('\n').strip('{').strip('}')
-    #print(class_encoding)
-            
-    class_names = []
-    class_codes = []
-
-    for c in class_encoding.split(','):
-        #print(c)
-        class_names.append(c.split(':')[0].replace("'", "").replace(" ", "").split('-')[-1])
-        class_codes.append(int(c.split(':')[1]))
-
-
-    class_coding = {}
-    for i in range(len(class_names)):
-        class_coding[class_codes[i]] = class_names[i]
-
-    return class_names, class_codes, class_coding
