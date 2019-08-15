@@ -198,7 +198,7 @@ class cancer_CNN_5layers(nn.Module):
         self.conv3 = BasicConv2d(32, 64, True, kernel_size=3, padding=1, bias=True)
         self.conv4 = BasicConv2d(64, 128, True, kernel_size=3, padding=1, bias=True)
         self.conv5 = BasicConv2d(128, 64, True, kernel_size=3, padding=1, bias=True)
-        self.linear = nn.Linear(5184, num_classes)
+        self.linear = nn.Linear(20736, num_classes)
 
     def forward(self, x):
         x = self.conv1(x)
@@ -255,7 +255,7 @@ class cancer_CNN_7layers_v1(nn.Module):
         self.conv5 = BasicConv2d(64, 64, True, kernel_size=3, padding=1, bias=True)
         self.conv6 = BasicConv2d(64, 128, True, kernel_size=3, padding=1, bias=True)
         self.conv7 = BasicConv2d(128, 64, True, kernel_size=3, padding=1, bias=True)
-        self.linear = nn.Linear(5184, num_classes)
+        self.linear = nn.Linear(1024, num_classes)
 
     def forward(self, x):
         x = self.conv1(x)
@@ -286,7 +286,7 @@ class cancer_CNN_7layers_v2(nn.Module):
         #addition
         self.conv6 = BasicConv2d(128, 128, True, kernel_size=3, padding=1, bias=True)
         self.conv7 = BasicConv2d(128, 64, True, kernel_size=3, padding=1, bias=True)
-        self.linear = nn.Linear(5184, num_classes)
+        self.linear = nn.Linear(1024, num_classes)
 
     def forward(self, x):
         x = self.conv1(x)

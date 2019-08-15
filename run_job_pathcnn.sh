@@ -1,8 +1,8 @@
 #!/bin/bash
 #
 #SBATCH --job-name=train
-##SBATCH --gres=gpu:p100:1
-#SBATCH --gres=gpu:1
+#SBATCH --gres=gpu:v100:1
+##SBATCH --gres=gpu:1
 #SBATCH --time=120:00:00
 #SBATCH --mem=15GB
 #SBATCH --output=outputs/%A.out
@@ -32,10 +32,10 @@ echo "Running on hosts: $SLURM_NODELIST"
 echo "Running on $SLURM_NNODES nodes."
 echo "Running on $SLURM_NPROCS processors."
 
-# model_version: 5layers, 7layers_v1 or 7layers_v2
+# model_version: 5layers, 7layers_v1 or 7layers_v2 --model_version=
 
-#nparam="--cuda --calc_val_auc  --augment --init=xavier --model_version=5layers --dropout=0.1 --root_dir=/beegfs/sb3923/DeepCancer/alldata/LungTilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/LungTilesSorted/Lung_FileMappingDict.p"
-nparam="--cuda --calc_val_auc  --augment --init=xavier --dropout=0.1 --root_dir=/beegfs/sb3923/DeepCancer/alldata/KidneyTilesSorted/ --num_class=4 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/KidneyTilesSorted/Kidney_FileMappingDict.p"
+nparam="--cuda --calc_val_auc  --augment --init=xavier --dropout=0.1 --root_dir=/beegfs/sb3923/DeepCancer/alldata/LungTilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/LungTilesSorted/Lung_FileMappingDict.p"
+#nparam="--cuda --calc_val_auc  --augment --init=xavier --dropout=0.1 --root_dir=/beegfs/sb3923/DeepCancer/alldata/KidneyTilesSorted/ --num_class=4 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/KidneyTilesSorted/Kidney_FileMappingDict.p"
 #nparam="--cuda --calc_val_auc  --augment --init=xavier --dropout=0.1 --root_dir=/beegfs/sb3923/DeepCancer/alldata/BreastTilesSorted/ --num_class=2 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/BreastTilesSorted/Breast_FileMappingDict.p"
 
 #################downsampling############################
@@ -43,8 +43,8 @@ nparam="--cuda --calc_val_auc  --augment --init=xavier --dropout=0.1 --root_dir=
 #nparam="--cuda --calc_val_auc  --augment --dropout=0.1 --root_dir=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds2TilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds2_FileMappingDict.p"
 #nparam="--cuda --calc_val_auc  --augment  --dropout=0.1 --root_dir=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds3TilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds3_FileMappingDict.p"
 
-#nexp="/scratch/sb3923/PathCNN_data/experiments/train_lung_full_pathcnn_5layers"
-nexp="/scratch/sb3923/PathCNN_data/experiments/train_kidney_full_pathcnn"
+nexp="/scratch/sb3923/PathCNN_data/experiments/train_lung_full_pathcnn_v100"
+#nexp="/scratch/sb3923/PathCNN_data/experiments/train_kidney_full_pathcnn"
 #nexp="/scratch/sb3923/PathCNN_data/experiments/train_breast_full_pathcnn"
 
  #################downsampling############################
@@ -52,8 +52,8 @@ nexp="/scratch/sb3923/PathCNN_data/experiments/train_kidney_full_pathcnn"
 #nexp="/scratch/sb3923/PathCNN_data/experiments/train_ds2_pathcnn"
 #nexp="/scratch/sb3923/PathCNN_data/experiments/train_ds3_pathcnn"
 
-#output="/scratch/sb3923/PathCNN_data/logs/train_lung_full_pathcnn_5layers.log" 
-output="/scratch/sb3923/PathCNN_data/logs/train_kidney_full_pathcnn.log"
+output="/scratch/sb3923/PathCNN_data/logs/train_lung_full_pathcnn_v100.log" 
+#output="/scratch/sb3923/PathCNN_data/logs/train_kidney_full_pathcnn.log"
 #output="/scratch/sb3923/PathCNN_data/logs/train_breast_full_pathcnn.log"
 
 
