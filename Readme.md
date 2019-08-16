@@ -87,7 +87,7 @@ python -u <FULL_PATH>/Tiling/0d_SortTiles.py --SourceFolder="<INPUT_PATH>" --Jso
 Run `Tiling/BuildTileDictionary.py` to build a dictionary of slides that is used to map each slide to a 2D array of tile paths and the true label. This is used in the `aggregate` function during training and evaluation.
 
 ```sh
-python -u Tiling/BuildTileDictionary.py --data <CANCER_TYPE> --path <ROOT_PATH>
+python3 -u Tiling/BuildTileDictionary.py --data <CANCER_TYPE> --path <ROOT_PATH>
 ```
 * `<ROOT_PATH>` points to the directory path for which the sorted tiles folder is stored in, same as in 2.2.
 
