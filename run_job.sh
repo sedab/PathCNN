@@ -34,10 +34,10 @@ echo "Running on $SLURM_NPROCS processors."
 module purge
 module load python/gpu/3.6.5 
 
-nparam="--cuda  --augment --dropout=0.1 --nonlinearity=leaky --init=xavier  --root_dir=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/LungTilesSorted/ --num_class=3 --tile_dict_path=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/Lung_FileMappingDict.p" 
+nparam="--cuda  --augment --dropout=0.1 --nonlinearity=leaky --init=xavier  --calc_val_auc --root_dir=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/LungTilesSorted/ --num_class=3 --tile_dict_path=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/Lung_FileMappingDict.p" 
 
-nexp="/gpfs/scratch/bilals01/test-repo/experiments/exp6"
+nexp="/gpfs/scratch/bilals01/test-repo/experiments/exp7"
 
-output="/gpfs/scratch/bilals01/test-repo/logs/exp6_train.log" 
+output="/gpfs/scratch/bilals01/test-repo/logs/exp7_train.log" 
 
 python3 -u /gpfs/scratch/bilals01/test-repo/PathCNN/train.py $nparam --experiment $nexp > $output

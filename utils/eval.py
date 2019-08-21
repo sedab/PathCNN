@@ -15,6 +15,7 @@ def get_error(pred, true, classes=[0, 1, 2]):
     and micro, macro AUCs. 
     
     """
+
     num_class=len(classes)
 
     n_bootstraps = 1000
@@ -67,24 +68,40 @@ def get_error(pred, true, classes=[0, 1, 2]):
                     continue
 
             indices['micro'] = rng[num_class].random_integers(0, len(pred_all) - 1, len(pred_all))
-                
-        score[0]= roc_auc_score(true[indices[0],0], pred[indices[0],0])  
-        bootstrapped_scores[0].append(score[0])
+           
+        try:
+            score[0]= roc_auc_score(true[indices[0],0], pred[indices[0],0])  
+            bootstrapped_scores[0].append(score[0])
+        except ValueError:
+            pass
+
         
+        #ValueError: Only one class present in y_true. ROC AUC score is not defined in that case.
         if num_class>2:
             for c in range(1,num_class):
-                score[c]= roc_auc_score(true[indices[c],c], pred[indices[c],c])
-                bootstrapped_scores[c].append(score[c])
+                try:
+                    score[c]= roc_auc_score(true[indices[c],c], pred[indices[c],c])
+                    bootstrapped_scores[c].append(score[c])
+                except ValueError:
+                    pass
 
             score_micro = roc_auc_score(true_all[indices['micro']], pred_all[indices['micro']])
             bootstrapped_scores['micro'].append(score_micro)
+
         
     if num_class>2:
+        
         for c in range(0,num_class):
-            sorted_scores[c] = np.array(bootstrapped_scores[c])
-            sorted_scores[c].sort()
-            confidence_lower[c] = sorted_scores[c][int(0.05 * len(sorted_scores[c]))]
-            confidence_upper[c] = sorted_scores[c][int(0.95 * len(sorted_scores[c]))]
+            if(len(bootstrapped_scores[c])>0):
+                sorted_scores[c] = np.array(bootstrapped_scores[c])
+                sorted_scores[c].sort()
+                confidence_lower[c] = sorted_scores[c][int(0.05 * len(sorted_scores[c]))]
+                confidence_upper[c] = sorted_scores[c][int(0.95 * len(sorted_scores[c]))]
+            else:
+                confidence_lower[c] = np.nan
+                confidence_upper[c] = np.nan
+                
+
 
         #micro
         sorted_scores['micro']=np.array(bootstrapped_scores['micro']) #!!!!!!!!!!!! 
@@ -97,13 +114,17 @@ def get_error(pred, true, classes=[0, 1, 2]):
         for c in range(0,num_class):
             all_bs.append(bootstrapped_scores[c])
 
-        #print((np.concatenate((bootstrapped_scores[0],bootstrapped_scores[1]), axis=0)).shape)
+        
         sorted_scores['macro']=np.array(list(chain.from_iterable(all_bs)))
         sorted_scores['macro'].sort()
-
-        confidence_lower['macro'] = sorted_scores['macro'][int(0.05 * len(sorted_scores['macro']))]
-        confidence_upper['macro'] = sorted_scores['macro'][int(0.95 * len(sorted_scores['macro']))]                                    
-
+        
+        if (len(sorted_scores['macro'])>0):
+            confidence_lower['macro'] = sorted_scores['macro'][int(0.05 * len(sorted_scores['macro']))]
+            confidence_upper['macro'] = sorted_scores['macro'][int(0.95 * len(sorted_scores['macro']))] 
+        else:
+            confidence_lower['macro'] = np.nan
+            confidence_upper['macro'] = np.nan
+            
 
         for c in range(0,num_class):
             all_cl[c] = confidence_lower[c]
@@ -148,7 +169,12 @@ def get_auc(predictions, labels, class_names, classes=[0, 1, 2]):
         ### Individual class AUC ###
         for i in classes:
             fpr[i], tpr[i], _ = roc_curve(labels[:, i], predictions[:, i])
-            roc_auc[i] = auc(fpr[i], tpr[i])
+            try:
+            #if (np.isnan(fpr[i]).all() | np.isnan(tpr[i]).all()):
+                roc_auc[i] = auc(fpr[i], tpr[i])
+            except ValueError:
+                roc_auc[i] = np.nan
+                pass
             
         cl , cu =get_error(predictions,label,classes)
 
@@ -159,9 +185,15 @@ def get_auc(predictions, labels, class_names, classes=[0, 1, 2]):
         ### Macro AUC ###
         all_fpr = np.unique(np.concatenate([fpr[i] for i in classes]))
         mean_tpr = np.zeros_like(all_fpr)
+        
+        number_class=0
         for i in classes:
-            mean_tpr += interp(all_fpr, fpr[i], tpr[i])
-        mean_tpr /= len(classes)
+            ip = interp(all_fpr, fpr[i], tpr[i])
+            if(~np.isnan(ip).any()):
+                mean_tpr += ip
+                number_class += 1
+                
+        mean_tpr /= number_class
 
         fpr["macro"] = all_fpr
         tpr["macro"] = mean_tpr

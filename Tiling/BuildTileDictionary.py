@@ -15,10 +15,13 @@ Purpose: Get dictionary with files:[2Darray tiles, type of cancer]
 parser = argparse.ArgumentParser()
 parser.add_argument('--data', type=str, default='Lung', help='Data to train on (Lung/Breast/Kidney)')
 parser.add_argument('--file_path', type=str, default='/beegfs/jmw784/Capstone/', help='Root path where the tiles are')
+parser.add_argument('--train_log', type=str, default='', help='path to the training output')
+
 opt = parser.parse_args()
 
 root_dir = opt.file_path + opt.data + "TilesSorted/"
 out_file = opt.file_path + opt.data + "_FileMappingDict.p"
+train_log = opt.train_log
 
 def find_classes(dir):
     # Classes are subdirectories of the root directory
@@ -26,6 +29,40 @@ def find_classes(dir):
     classes.sort()
     class_to_idx = {classes[i]: i for i in range(len(classes))}
     return classes, class_to_idx
+
+
+def get_class_coding(lf):
+    auc_new = []
+    phrase = "Class encoding:"
+
+    with open(lf, 'r+') as f:
+        lines = f.readlines()
+        for i in range(0, len(lines)):
+            line = lines[i]
+            #print(line)
+            if phrase in line:
+                class_encoding = lines[i + 1] # you may want to check that i < len(lines)
+                break
+                
+    class_encoding = class_encoding.strip('\n').strip('{').strip('}')
+    #print(class_encoding)
+            
+    class_names = []
+    class_codes = []
+
+    for c in class_encoding.split(','):
+        #print(c)
+        class_names.append(c.split(':')[0].replace("'", "").replace(" ", ""))#.split('-')[-1])
+        class_codes.append(int(c.split(':')[1]))
+    
+
+    class_coding = {}
+    for i in range(len(class_names)):
+        class_coding[class_codes[i]] = class_names[i]
+    
+    class_codes.sort()
+    return class_names, class_codes, class_coding
+
 
 def getCoords(tile_list): 
     
@@ -84,7 +121,18 @@ def main():
         if response == 'n':
             quit()
 
-    classes, class_to_idx = find_classes(root_dir)
+#if classes provided for testing are less than for training        
+    if(train_log!=''):
+        c_names, c_codes, c_coding = get_class_coding(train_log)
+        c_coding_invert = {v: k for k, v in c_coding.items()}
+        classes, _ = find_classes(root_dir)
+        class_to_idx = {}
+        for n in classes:
+            class_to_idx[n] = c_coding_invert[n]  
+    else:
+        classes, class_to_idx = find_classes(root_dir)
+    
+    
     print(class_to_idx)
     
     tile_files = {}

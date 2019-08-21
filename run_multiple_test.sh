@@ -38,7 +38,7 @@ nparam="--root_dir=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/Lun
 
 nexp="/gpfs/scratch/bilals01/test-repo/experiments/exp2"
 
-out="/gpfs/scratch/bilals01/test-repo/logs"
+out="/gpfs/scratch/bilals01/test-repo/logs/test"
 
 # check if next checkpoint available
 declare -i count=1
@@ -48,7 +48,7 @@ while true; do
     echo $count
     PathToEpoch="${nexp}/checkpoints/"
     Cmodel="epoch_$count.pth"
-    output="${out}/test_log_${Cmodel}.log"
+    output="${out}/test_exp2_log_${Cmodel}.log"
     echo $PathToEpoch
     echo $Cmodel
     echo $output

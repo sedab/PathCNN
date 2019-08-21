@@ -24,13 +24,14 @@ parser.add_argument('--root_dir', type=str, default='<ROOT_PATH><CANCER_TYPE>Til
 parser.add_argument('--num_class', type=int, default=2, help='number of classes ')
 parser.add_argument('--tile_dict_path', type=str, default='"<ROOT_PATH><CANCER_TYPE>_FileMappingDict.p', help='Tile dictinory path')
 parser.add_argument('--val', type=str, default='test', help='validation set')
+parser.add_argument('--train_log', type=str, default='/gpfs/scratch/bilals01/test-repo/logs/exp6_train.log', help='point to the log file created from the training')
 
 opt = parser.parse_args()
 
 root_dir = str(opt.root_dir)
 num_classes = int(opt.num_class)
 tile_dict_path = str(opt.tile_dict_path)
-
+tl_file = str(opt.train_log)
 test_val = str(opt.val)
 
 imgSize = 299
@@ -39,7 +40,7 @@ transform = transforms.Compose([new_transforms.Resize((imgSize,imgSize)),
                                 transforms.ToTensor(),
                                 transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
-test_data = TissueData(root_dir, test_val, transform = transform, metadata=False, test_valid=True)
+test_data = TissueData(root_dir, test_val, train_log=tl_file, transform = transform, metadata=False)
 test_loader = torch.utils.data.DataLoader(test_data, batch_size=32, shuffle=False, num_workers=8)
 
 classes = test_data.classes
@@ -202,8 +203,8 @@ state_dict = torch.load(model_path)
 model.load_state_dict(state_dict)
 
 predictions, labels = aggregate(test_data.filenames, method='max')
-
-data = np.column_stack((np.asarray(predictions),np.asarray(labels)))
+ 
+data = np.column_stack((test_data.filenames,np.asarray(predictions),np.asarray(labels)))
 data.dump(open('{0}/outputs/{1}_pred_label_max_{2}.npy'.format(opt.experiment,opt.val,opt.model), 'wb'))
 
 #This can be used if need to print the auc and save the roc curve automatically
@@ -214,7 +215,7 @@ print('Max method:')
 print(roc_auc)
 
 predictions, labels = aggregate(test_data.filenames, method='average')
-data = np.column_stack((np.asarray(predictions),np.asarray(labels)))
+data = np.column_stack((test_data.filenames,np.asarray(predictions),np.asarray(labels)))
 data.dump(open('{0}/outputs/{1}_pred_label_avg_{2}.npy'.format(opt.experiment,opt.val,opt.model), 'wb'))
 
 #This can be used if need to print the auc and save the roc curve automatically

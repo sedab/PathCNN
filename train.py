@@ -108,9 +108,9 @@ loaders = {}
 
 for dset_type in ['train', 'valid']:
     if dset_type == 'train' and opt.augment:
-        data[dset_type] = TissueData(root_dir, dset_type, transform = augment, metadata=opt.metadata, test_valid=False)
+        data[dset_type] = TissueData(root_dir, dset_type, train_log='', transform = augment, metadata=opt.metadata)
     else:
-        data[dset_type] = TissueData(root_dir, dset_type, transform = transform, metadata=opt.metadata, test_valid=False)
+        data[dset_type] = TissueData(root_dir, dset_type, train_log='', transform = transform, metadata=opt.metadata)
 
     loaders[dset_type] = torch.utils.data.DataLoader(data[dset_type], batch_size=opt.batchSize, shuffle=True, num_workers=8)
     print('Finished loading %s dataset: %s samples' % (dset_type, len(data[dset_type])))

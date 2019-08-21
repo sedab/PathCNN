@@ -38,9 +38,16 @@ def get_auc(path, predictions, labels, classes=[0, 1, 2]):
         ### Macro AUC ###
         all_fpr = np.unique(np.concatenate([fpr[i] for i in classes]))
         mean_tpr = np.zeros_like(all_fpr)
+        
+        number_class=0
         for i in classes:
-            mean_tpr += interp(all_fpr, fpr[i], tpr[i])
-        mean_tpr /= len(classes)
+            ip = interp(all_fpr, fpr[i], tpr[i])
+            if(~np.isnan(ip).any()):
+                mean_tpr += ip
+                number_class += 1
+                
+                
+        mean_tpr /= number_class
 
         fpr["macro"] = all_fpr
         tpr["macro"] = mean_tpr

@@ -40,30 +40,34 @@ def get_class_coding(lf):
 
     for c in class_encoding.split(','):
         #print(c)
-        class_names.append(c.split(':')[0].replace("'", "").replace(" ", "").split('-')[-1])
+        class_names.append(c.split(':')[0].replace("'", "").replace(" ", ""))#.split('-')[-1])
         class_codes.append(int(c.split(':')[1]))
-
+    
 
     class_coding = {}
     for i in range(len(class_names)):
         class_coding[class_codes[i]] = class_names[i]
-
-    return class_names, class_codes.sort(), class_coding
+    
+    class_codes.sort()
+    return class_names, class_codes, class_coding
 
 
 class TissueData(data.Dataset):
-    def __init__(self, root, dset_type, data='lung', transform=None, metadata=False, test_valid=False):
+    def __init__(self, root, dset_type, train_log, data='lung', transform=None, metadata=False):
 
         
-        classes, class_to_idx = find_classes(root)
-        #if test_valid:
-        #    c_names, c_codes, c_coding = get_class_coding
-        #    classes, class_to_idx = find_classes(root)
-        #    classes = 
-            #'Solid_Tissue_Normal': 0, 'TCGA-LUAD': 1, 'TCGA-LUSC': 2
-        #    class_to_idx = 
-        #else:
-        #    classes, class_to_idx = find_classes(root)
+        #classes, class_to_idx = find_classes(root)
+        if train_log != '':
+            c_names, c_codes, c_coding = get_class_coding(train_log)
+            c_coding_invert = {v: k for k, v in c_coding.items()}
+            classes, _ = find_classes(root)
+            class_to_idx = {}
+            for n in classes:
+                class_to_idx[n] = c_coding_invert[n]       
+            #print(class_to_idx)
+            
+        else:
+            classes, class_to_idx = find_classes(root)
             
 
         self.data = data
