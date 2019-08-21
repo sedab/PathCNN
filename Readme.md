@@ -87,9 +87,13 @@ python -u <FULL_PATH>/Tiling/0d_SortTiles.py --SourceFolder="<INPUT_PATH>" --Jso
 Run `Tiling/BuildTileDictionary.py` to build a dictionary of slides that is used to map each slide to a 2D array of tile paths and the true label. This is used in the `aggregate` function during training and evaluation.
 
 ```sh
-python3 -u Tiling/BuildTileDictionary.py --data <CANCER_TYPE> --path <ROOT_PATH>
+python3 -u Tiling/BuildTileDictionary.py --data <CANCER_TYPE> --file_path <ROOT_PATH> --train_log /gpfs/scratch/bilals01/test-repo/logs/exp6_train.log
 ```
-* `<ROOT_PATH>` points to the directory path for which the sorted tiles folder is stored in, same as in 2.2.
+* --file_path `<ROOT_PATH>` points to the directory path for which the sorted tiles folder is stored in, same as in 2.2.
+
+* --data `<CANCER_TYPE>` is the base name for the given type. 
+
+*  train_log points to the log file from training. (This option is only needed if you are testing data where not all the classes are presented )
 
 Note that this code assumes that the sorted tiles are stored in `<ROOT_PATH><CANCER_TYPE>TilesSorted`. If you do not follow this convention, you may need to modify this code.
 
