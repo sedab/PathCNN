@@ -177,9 +177,13 @@ Run ```test.py``` to evaluate a specific model on the test/validation data, ```r
 
 * `--val`: validation vs test (default='test', or use 'valid')
 
+* `--train_log`: log file from training (default='')
+
 The output data will be dumped under experiments/experiment_name folder.
 
 * To run the test data with multiple check points, use run_multiple_test.sh script. Set the experiment, count (epoch number to start from) and step (increment of epoch number) variables in the script accordingly.
+
+Note: If number of classes presented is less than what the model is trained for, you will need to pass the log file created by the model as input to the test script using `--train_log` parameter
 
 
 ### 6. Evaluation:
