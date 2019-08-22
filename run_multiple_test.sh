@@ -33,12 +33,16 @@ echo "Running on $SLURM_NPROCS processors."
 module purge
 module load python/gpu/3.6.5
 
+#input params
+exp_name="exp8"
+test_val="test"
 
-nparam="--root_dir=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/LungTilesSorted/ --num_class=3 --tile_dict_path=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/Lung_FileMappingDict.p --val=test"
 
-nexp="/gpfs/scratch/bilals01/test-repo/experiments/exp2"
+nparam="--root_dir=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/LungTilesSorted/ --num_class=3 --tile_dict_path=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/Lung_FileMappingDict.p --val=${test_val}"
 
-out="/gpfs/scratch/bilals01/test-repo/logs/test"
+nexp="/gpfs/scratch/bilals01/test-repo/experiments/${exp_name}"
+
+out="/gpfs/scratch/bilals01/test-repo/logs/${test_val}"
 
 # check if next checkpoint available
 declare -i count=1
@@ -48,7 +52,7 @@ while true; do
     echo $count
     PathToEpoch="${nexp}/checkpoints/"
     Cmodel="epoch_$count.pth"
-    output="${out}/test_exp2_log_${Cmodel}.log"
+    output="${out}/${test_val}_${exp_name}_${Cmodel}.log"
     echo $PathToEpoch
     echo $Cmodel
     echo $output

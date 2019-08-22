@@ -34,10 +34,15 @@ echo "Running on $SLURM_NPROCS processors."
 module purge
 module load python/gpu/3.6.5
 
-nparam="--model=epoch_2.pth --root_dir=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/LngTilesSorted/ --num_class=3 --tile_dict_path=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/Lng_FileMappingDict.p --val=test"
+#input params
+exp_name="exp8"
+model_cp="epoch_2.pth"
+test_val="test" 
 
-nexp="/gpfs/scratch/bilals01/test-repo/experiments/exp2"
+nparam="--model=${model_cp} --root_dir=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/LngTilesSorted/ --num_class=3 --tile_dict_path=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/Lng_FileMappingDict.p --val=${test_val}"
 
-output="/gpfs/scratch/bilals01/test-repo/logs/log_test_single_class.log" 
+nexp="/gpfs/scratch/bilals01/test-repo/experiments/${exp_name}"
+
+output="/gpfs/scratch/bilals01/test-repo/logs/${exp_name}_${test_val}_${model_cp}.log" 
 
 python3 -u /gpfs/scratch/bilals01/test-repo/PathCNN/test.py $nparam --experiment $nexp > $output
