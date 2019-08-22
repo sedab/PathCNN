@@ -101,9 +101,11 @@ Note that this code assumes that the sorted tiles are stored in `<ROOT_PATH><CAN
 
 Run `train.py` to train with our CNN architecture. sbatch file `run_job.sh` is provided as an example script for submitting a GPU job for this script. Inside the run_job.sh, set parameteres: nexp, output and param as described below. You need to create two directories where the output of the training will be saved at: one for experiemnts, and one for logs. 
 
-* `nexp` = "dir/experiments/exp" : will create a subfolder under experiments folder which will save the checkpoints and predcitions
+* `exp_name` = "exp8" 
 
-* `output` = "dir/logs/log.log" : will create a log file under the logs folder where the training output will be printed on.
+* `nexp` = "dir/experiments/${exp_name}" : will create a subfolder under experiments folder which will save the checkpoints and predcitions, experiment name is determined by  the param `exp_name`
+
+* `output` = "dir/logs/${exp_name}.log" : will create a log file under the logs folder where the training output will be printed on,log name is determined by  the param `exp_name`
 
 * `nparam` = "--cuda  --augment --dropout=0.1 --nonlinearity='leaky' --init=‘xavier’ --root_dir=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lungTilesSorted/ --num_class=7 --tile_dict_path=/gpfs/scratch/bilals01/brain-kidney-lung/brain-kidney-lung_FileMappingDict.p"
 
@@ -164,11 +166,15 @@ The model checkpoints at every epoch and steps (frequency determined by the user
 
 Run ```test.py``` to evaluate a specific model on the test/validation data, ```run_test.sh``` is the associated sbatch file. Inside the run_test.sh, set parameteres: nexp, output and param as described below. 
 
-* `nexp` = "dir/experiments/exp" : same exp directory set for the training
+* `exp_name` = "exp8" : set a name for the experiment
 
-* `output` = "dir/logs/log_test.log" : name the test log with "*_test.log"
+* `test_val` = "test" : choose between test and valid
 
-* `nparam` = "--model='epoch_2.pth' --root_dir=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/LungTilesSorted/ --num_class=7 --tile_dict_path=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/Lung_FileMappingDict.p --val=test"
+* `nexp` = "dir/experiments/${exp_name}" : same exp directory set for the training, experiment name is determined by  the param `exp_name`
+
+* `output` = "dir/logs/${test_val}.log" : name the test log with "*_test.log", log name is determined by  the param `exp_name`
+
+* `nparam` = "--model='epoch_2.pth' --root_dir=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/LungTilesSorted/ --num_class=7 --tile_dict_path=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/Lung_FileMappingDict.p --val=${test_val}"
 
 **nparam:**
 * `--model`: Name of model to test, e.g. `epoch_10.pth`
@@ -179,7 +185,7 @@ Run ```test.py``` to evaluate a specific model on the test/validation data, ```r
 
 * `--tile_dict_path`: path to your Tile dictinory path (format="<ROOT_PATH><CANCER_TYPE>_FileMappingDict.p")
 
-* `--val`: validation vs test (default='test', or use 'valid')
+* `--val`: validation vs test (default='test', or use 'valid'), use `test_val` to set the parameter
 
 * `--train_log`: log file from training (default='')
 
