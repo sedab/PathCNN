@@ -34,7 +34,7 @@ echo "Running on $SLURM_NPROCS processors."
 module purge
 module load python/gpu/3.6.5 
 
-exp_name="exp8"
+exp_name="exp2"
 
 nparam="--cuda  --augment --dropout=0.1 --nonlinearity=leaky --init=xavier  --calc_val_auc --root_dir=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/LungTilesSorted/ --num_class=3 --tile_dict_path=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/Lung_FileMappingDict.p" 
 
