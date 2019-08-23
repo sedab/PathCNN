@@ -1,28 +1,31 @@
 #!/bin/bash
-#SBATCH --partition=gpu8_medium
-#SBATCH --ntasks=8
-#SBATCH --cpus-per-task=1
-#SBATCH --job-name=train_PCNN
-#SBATCH --gres=gpu:1
-#SBATCH --output=outputs/rq_train1_%A_%a.out
-#SBATCH --error=outputs/rq_train1_%A_%a.err
-#SBATCH --mem=200GB
-
-##### above is for on nyulmc hpc: bigpurple #####
-##### below is for on nyu hpc: prince #####
-##!/bin/bash
-##
-##SBATCH --job-name=charrrr
+#
+#SBATCH --job-name=train
+#SBATCH --gres=gpu:p100:1
 ##SBATCH --gres=gpu:1
-##SBATCH --time=47:00:00
-##SBATCH --mem=15GB
-##SBATCH --output=outputs/%A.out
-##SBATCH --error=outputs/%A.err
-#module purge
-#module load python3/intel/3.5.3
-#module load pytorch/python3.5/0.2.0_3
-#module load torchvision/python3.5/0.1.9
-#python3 -m pip install comet_ml —user
+#SBATCH --time=120:00:00
+#SBATCH --mem=15GB
+#SBATCH --output=outputs/%A.out
+#SBATCH --error=outputs/%A.err
+
+##### below is for on nyulmc hpc: bigpurple #####
+##### above is for on nyu hpc: prince #####
+
+##!/bin/bash
+##SBATCH --partition=gpu8_medium
+##SBATCH --ntasks=8
+##SBATCH --cpus-per-task=1
+##SBATCH --job-name=train_PCNN
+##SBATCH --gres=gpu:1
+##SBATCH --output=outputs/rq_train1_%A_%a.out
+##SBATCH --error=outputs/rq_train1_%A_%a.err
+##SBATCH --mem=200GB
+
+
+module purge
+module load python3/intel/3.5.3
+module load pytorch/python3.5/0.2.0_3
+module load torchvision/python3.5/0.1.9
 
 echo "Starting at `date`"
 echo "Job name: $SLURM_JOB_NAME JobID: $SLURM_JOB_ID"
