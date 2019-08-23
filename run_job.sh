@@ -38,8 +38,25 @@ module purge
 module load python/gpu/3.6.5 
 
 exp_name="exp2"
+model="alexnet" #
+im_size = "224"
 
-nparam="--cuda  --augment --dropout=0.1 --nonlinearity=leaky --init=xavier  --calc_val_auc --root_dir=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/LungTilesSorted/ --num_class=3 --tile_dict_path=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/Lung_FileMappingDict.p" 
+nparam="--cuda --calc_val_auc --augment  --init=xavier --dropout=0.1 --imgSize=${im_size} --nonlinearity=leaky --model_type=${model} --root_dir=/beegfs/sb3923/DeepCancer/alldata/LungTilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/LungTilesSorted/Lung_FileMappingDict.p" 
+#kidney
+#nparam="--cuda --calc_val_auc  --augment --init=xavier --dropout=0.1 --imgSize=${im_size} --nonlinearity=leaky --model_type=${model}  --root_dir=/beegfs/sb3923/DeepCancer/alldata/KidneyTilesSorted/ --num_class=4 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/KidneyTilesSorted/Kidney_FileMappingDict.p"
+#breast
+#nparam="--cuda --calc_val_auc  --augment --init=xavier --dropout=0.1 --imgSize=${im_size} --nonlinearity=leaky --model_type=${model}  --root_dir=/beegfs/sb3923/DeepCancer/alldata/BreastTilesSorted/ --num_class=2 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/BreastTilesSorted/Breast_FileMappingDict.p"
+
+
+#downsampled lung
+#ds1
+#nparam="--cuda  --augment --dropout=0.1 --imgSize=${im_size} --nonlinearity=leaky --model_type=${model} --init=xavier  --calc_val_auc --root_dir=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds1TilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds1_FileMappingDict.p" 
+#ds2
+#nparam="--cuda  --augment --dropout=0.1 --imgSize=${im_size} --nonlinearity=leaky --model_type=${model} --init=xavier  --calc_val_auc --root_dir=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds2TilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds2_FileMappingDict.p" 
+#ds3
+#nparam="--cuda  --augment --dropout=0.1 --imgSize=${im_size} --nonlinearity=leaky --model_type=${model} --init=xavier  --calc_val_auc --root_dir=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds3TilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds3_FileMappingDict.p" 
+
+
 
 nexp="/gpfs/scratch/bilals01/test-repo/experiments/${exp_name}"
 
