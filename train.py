@@ -302,30 +302,30 @@ class cancer_CNN_7layers_v2(nn.Module):
 # Create model objects
 # Create model objects
 if opt.model_type == '5layers':
-    print('5 layers')
+    print('using PathCNN 5 layers')
     model = cancer_CNN_5layers(nc, imgSize, ngpu)
     init_model(model)
 
 elif opt.model_type == '7layers_v1':
-    print('7 layers, v1')
+    print('using PathCNN 7 layers, v1')
     model = cancer_CNN_7layers_v1(nc, imgSize, ngpu)
     init_model(model)
 
 elif opt.model_type == '7layers_v2':
-    print('7 layers, v2')
+    print('using PathCNN 7 layers, v2')
     model = cancer_CNN_7layers_v2(nc, imgSize, ngpu)
     init_model(model)
 
 elif(opt.model_type == 'alexnet'):
-    print('using '+ modeltype)
+    print('using alexnet')
     model = models.alexnet(num_classes=3)
 
 elif(opt.model_type == 'vgg16'):
-    print('using '+ modeltype)
+    print('using vgg16')
     model = models.vgg16(num_classes=3)
     
 else:
-    print('6 layers')
+    print('using PathCNN 6 layers')
     model = cancer_CNN(nc, imgSize, ngpu)
     init_model(model)
 
