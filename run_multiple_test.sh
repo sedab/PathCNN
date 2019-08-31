@@ -1,24 +1,13 @@
 #!/bin/bash
-# Resource Request
-#SBATCH --partition=cpu_dev
-#SBATCH --job-name=gauto_conv
-#SBATCH --ntasks=1
-#SBATCH --cpus-per-task=1
-#SBATCH --mem=10G
-#SBATCH --time=3:00:00
-#SBATCH --output=outputs/cpu_train1_%A_%a.out
-#SBATCH --error=outputs/cpu_train1_%A_%a.err
-
-##!/bin/bash
-##SBATCH --partition=gpu4_short
-##SBATCH --ntasks=8
-##SBATCH --cpus-per-task=1
-##SBATCH --job-name=multiple_PCNN
-##SBATCH --gres=gpu:4
-##SBATCH --output=outputs/rq_train1_%A_%a.out
-##SBATCH --error=outputs/rq_train1_%A_%a.err
-##SBATCH --mem=100GB
-
+#
+#SBATCH --job-name=m_test
+##SBATCH --gres=gpu:p100:1
+#SBATCH --gres=gpu:1
+#SBATCH --time=120:00:00
+#SBATCH --mem=15GB
+#SBATCH --output=outputs/test_%A.out
+#SBATCH --error=outputs/test_%A.err
+#
 ##### above is for on nyulmc hpc: bigpurple #####
 ##### below is for on nyu hpc: prince #####
 ##!/bin/bash
@@ -42,21 +31,26 @@ echo "Running on $SLURM_NNODES nodes."
 echo "Running on $SLURM_NPROCS processors."
 
 module purge
-module load python/gpu/3.6.5
+module load python3/intel/3.5.3
+module load pytorch/python3.5/0.2.0_3
+module load torchvision/python3.5/0.1.9
 
 #input params
-exp_name="exp8"
+exp_name="lung_8layers_tr"
 test_val="test"
-im_size="224" 
-model="alexnet"
+im_size="299" 
+model="8layers"
+tlog="/scratch/sb3923/logs/${exp_name}.log" 
 
-
-nparam="--root_dir=/beegfs/sb3923/DeepCancer/alldata/LungTilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/LungTilesSorted/Lung_FileMappingDict.p --val=${test_val} --imgSize=im_size --model_type=model" 
+nparam="--root_dir=/beegfs/sb3923/DeepCancer/alldata/LungTilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/LungTilesSorted/Lung_FileMappingDict.p --train_log=${tlog} --val=${test_val} --imgSize=${im_size} --model_type=${model}" 
 #kidney
-#nparam="--root_dir=/beegfs/sb3923/DeepCancer/alldata/KidneyTilesSorted/ --num_class=4 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/KidneyTilesSorted/Kidney_FileMappingDict.p --val=${test_val} --imgSize=im_size --model_type=model"
+#nparam="--root_dir=/beegfs/sb3923/DeepCancer/alldata/KidneyTilesSorted/ --num_class=4 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/KidneyTilesSorted/Kidney_FileMappingDict.p --train_log=${tlog} --val=${test_val} --imgSize=${im_size} --model_type=${model}"
 #breast
-#nparam="--root_dir=/beegfs/sb3923/DeepCancer/alldata/BreastTilesSorted/ --num_class=2 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/BreastTilesSorted/Breast_FileMappingDict.p --val=${test_val} --imgSize=im_size --model_type=model"
-
+#nparam="--root_dir=/beegfs/sb3923/DeepCancer/alldata/BreastTilesSorted/ --num_class=2 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/BreastTilesSorted/Breast_FileMappingDict.p --train_log=${tlog} --val=${test_val} --imgSize=${im_size} --model_type=${model}"
+#breast subtypes
+#nparam="--root_dir=/beegfs/sb3923/DeepCancer/alldata/BreastSubtypes/BreastTilesSorted/ --num_class=5 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/BreastSubtypes/Breast_FileMappingDict.p --train_log=${tlog} --val=${test_val} --imgSize=${im_size} --model_type=${model}"
+#lung5x
+#nparam="--root_dir=/beegfs/sb3923/DeepCancer/alldata/Lung5xTilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/Lung5xTilesSorted/Lung5x_FileMappingDict.p --train_log=${tlog} --val=${test_val} --imgSize=${im_size} --model_type=${model}"
 
 #downsampled lung, you probably need the full dataset
 #ds1
@@ -67,14 +61,13 @@ nparam="--root_dir=/beegfs/sb3923/DeepCancer/alldata/LungTilesSorted/ --num_clas
 #nparam="--root_dir=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds3TilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds3_FileMappingDict.p --val=${test_val} --imgSize=im_size --model_type=model" 
 
 
+nexp="/scratch/sb3923/experiments/${exp_name}"
+out="/scratch/sb3923/logs/${test_val}"
 
-nexp="/gpfs/scratch/bilals01/test-repo/experiments/${exp_name}"
 
-out="/gpfs/scratch/bilals01/test-repo/logs/${test_val}"
-
-if [ ! -d $out ]; then
-    mkdir -p $out;
-fi
+#if [ ! -d $out ]; then
+#    mkdir -p $out;
+#fi
 
 # check if next checkpoint available
 declare -i count=1

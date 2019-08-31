@@ -61,6 +61,7 @@ class TissueData(data.Dataset):
             c_names, c_codes, c_coding = get_class_coding(train_log)
             c_coding_invert = {v: k for k, v in c_coding.items()}
             classes, _ = find_classes(root)
+            #print(classes)
             class_to_idx = {}
             for n in classes:
                 class_to_idx[n] = c_coding_invert[n]       

@@ -16,6 +16,7 @@ from utils.dataloader import *
 #from utils.auc_test import *
 from utils.auc import *
 from utils import new_transforms
+import torchvision.models as models
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--experiment', default='', help="name of experiment to test")
@@ -27,18 +28,20 @@ parser.add_argument('--val', type=str, default='test', help='validation set')
 parser.add_argument('--train_log', type=str, default='/gpfs/scratch/bilals01/test-repo/logs/exp6_train.log', help='point to the log file created from the training')
 parser.add_argument('--imgSize', type=int, default=299, help='the height / width of the image to network')
 parser.add_argument('--model_type',type=str,  default='PathCNN', help='choose the model to train with: PathCNN, alexnet,vgg16')
+parser.add_argument('--nc', type=int, default=3, help='input image channels (+ concatenated info channels if metadata = True)')
+parser.add_argument('--ngpu'  , type=int, default=1, help='number of GPUs to use')
+
 
 opt = parser.parse_args()
-
+nc = int(opt.nc)
 root_dir = str(opt.root_dir)
 num_classes = int(opt.num_class)
 tile_dict_path = str(opt.tile_dict_path)
 tl_file = str(opt.train_log)
 test_val = str(opt.val)
 imgSize = int(opt.imgSize)
+ngpu = int(opt.ngpu)
 
-
-imgSize = 299
 
 transform = transforms.Compose([new_transforms.Resize((imgSize,imgSize)),
                                 transforms.ToTensor(),
@@ -290,28 +293,25 @@ class cancer_CNN_7layers_v2(nn.Module):
 if opt.model_type == '5layers':
     print('using PathCNN 5 layers')
     model = cancer_CNN_5layers(nc, imgSize, ngpu)
-
 elif opt.model_type == '7layers_v1':
     print('using PathCNN 7 layers, v1')
     model = cancer_CNN_7layers_v1(nc, imgSize, ngpu)
-
 elif opt.model_type == '7layers_v2':
     print('using PathCNN 7 layers, v2')
     model = cancer_CNN_7layers_v2(nc, imgSize, ngpu)
-    init_model(model)
-
 elif(opt.model_type == 'alexnet'):
     print('using alexnet')
-    model = models.alexnet(num_classes=3)
-
+    model = models.alexnet(num_classes= num_classes)
 elif(opt.model_type == 'vgg16'):
     print('using vgg16')
-    model = models.vgg16(num_classes=3)
-    
+    model = models.vgg16(num_classes=num_classes)
+elif(opt.model_type == 'resnet18'):
+    print('using resnet18')
+    model = models.resnet18(num_classes=num_classes)
 else:
     print('using PathCNN 6 layers')
     model = cancer_CNN(nc, imgSize, ngpu)
-    init_model(model)
+
    
 
 model.cuda()
