@@ -1,12 +1,12 @@
 #!/bin/bash
-#SBATCH --partition=gpu8_medium
+#SBATCH --partition=gpu8_short
 #SBATCH --ntasks=8
 #SBATCH --cpus-per-task=1
 #SBATCH --job-name=test_PCNN
-#SBATCH --gres=gpu:4
+#SBATCH --gres=gpu:1
 #SBATCH --output=outputs/rq_train1_%A_%a.out
 #SBATCH --error=outputs/rq_train1_%A_%a.err
-#SBATCH --mem=100GB
+#SBATCH --mem=50GB
 
 ##### above is for on nyulmc hpc: bigpurple #####
 ##### below is for on nyu hpc: prince #####
@@ -35,11 +35,11 @@ module purge
 module load python/gpu/3.6.5
 
 #input params
-exp_name="exp8"
+exp_name="exp7"
 model_cp="epoch_2.pth"
 test_val="test" 
 
-nparam="--model=${model_cp} --root_dir=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/LngTilesSorted/ --num_class=3 --tile_dict_path=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/Lng_FileMappingDict.p --val=${test_val}"
+nparam="--model=${model_cp} --root_dir=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/LungTilesSorted/ --num_class=3 --tile_dict_path=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/Lung_FileMappingDict.p --val=${test_val}"
 
 nexp="/gpfs/scratch/bilals01/test-repo/experiments/${exp_name}"
 

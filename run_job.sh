@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --partition=gpu8_medium
+#SBATCH --partition=gpu8_long
 #SBATCH --ntasks=8
 #SBATCH --cpus-per-task=1
 #SBATCH --job-name=train_PCNN
@@ -34,9 +34,11 @@ echo "Running on $SLURM_NPROCS processors."
 module purge
 module load python/gpu/3.6.5 
 
-exp_name="exp2"
+exp_name="pancan_21c_tr"
 
-nparam="--cuda  --augment --dropout=0.1 --nonlinearity=leaky --init=xavier  --calc_val_auc --root_dir=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/LungTilesSorted/ --num_class=3 --tile_dict_path=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/Lung_FileMappingDict.p" 
+#nparam="--cuda  --augment --dropout=0.1 --nonlinearity=leaky --init=xavier  --calc_val_auc --root_dir=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/LungTilesSorted/ --num_class=3 --tile_dict_path=/gpfs/data/abl/deepomics/tsirigoslab/histopathology/Tiles/Lung_FileMappingDict.p" 
+
+nparam="--cuda  --augment --dropout=0.1 --nonlinearity=leaky --init=xavier  --root_dir=/gpfs/scratch/bilals01/AllDs600/AllDs600TilesSorted/ --num_class=21 --tile_dict_path=/gpfs/scratch/bilals01/AllDs600/AllDs600_FileMappingDict.p" 
 
 nexp="/gpfs/scratch/bilals01/test-repo/experiments/${exp_name}"
 

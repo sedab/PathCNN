@@ -98,6 +98,7 @@ def aggregate(file_list, method):
     model.eval()
     predictions = []
     true_labels = []
+    tile_count = []
 
     for file in file_list:
         tile_paths, label = tile_dict[file]
@@ -142,8 +143,9 @@ def aggregate(file_list, method):
 
         predictions.append(prediction)
         true_labels.append(label)
+        tile_count.append(len(tile_paths))
 
-    return np.array(predictions), np.array(true_labels)
+    return np.array(predictions), np.array(true_labels), np.array(tile_count)
 
 class BasicConv2d(nn.Module):
 
@@ -202,9 +204,11 @@ model_path = opt.experiment + '/checkpoints/' + opt.model
 state_dict = torch.load(model_path)
 model.load_state_dict(state_dict)
 
-predictions, labels = aggregate(test_data.filenames, method='max')
+predictions, labels, num_of_tiles = aggregate(test_data.filenames, method='max')
  
-data = np.column_stack((test_data.filenames,np.asarray(predictions),np.asarray(labels)))
+data = np.column_stack((test_data.filenames,np.asarray(predictions),np.asarray(labels),np.asarray(num_of_tiles)))
+
+
 data.dump(open('{0}/outputs/{1}_pred_label_max_{2}.npy'.format(opt.experiment,opt.val,opt.model), 'wb'))
 
 #This can be used if need to print the auc and save the roc curve automatically
@@ -214,8 +218,8 @@ roc_auc  = get_auc('{0}/images/{1}_AUC_max_{2}.jpg'.format(opt.experiment,opt.va
 print('Max method:')
 print(roc_auc)
 
-predictions, labels = aggregate(test_data.filenames, method='average')
-data = np.column_stack((test_data.filenames,np.asarray(predictions),np.asarray(labels)))
+predictions, labels, num_of_tiles = aggregate(test_data.filenames, method='average')
+data = np.column_stack((test_data.filenames,np.asarray(predictions),np.asarray(labels),np.asarray(num_of_tiles)))
 data.dump(open('{0}/outputs/{1}_pred_label_avg_{2}.npy'.format(opt.experiment,opt.val,opt.model), 'wb'))
 
 #This can be used if need to print the auc and save the roc curve automatically
