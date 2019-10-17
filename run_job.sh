@@ -1,10 +1,12 @@
 #!/bin/bash
 #
 #SBATCH --job-name=train
-##SBATCH --gres=gpu:p100:1
-#SBATCH --gres=gpu:1
-#SBATCH --time=120:00:00
-#SBATCH --mem=50GB
+#SBATCH --gres=gpu:p40:1
+##SBATCH --gres=gpu:v100:1
+##SBATCH --gres=gpu:1
+##SBATCH --cpus-per-task=5
+#SBATCH --time=60:00:00
+#SBATCH --mem=100GB
 #SBATCH --output=outputs/train_%A.out
 #SBATCH --error=outputs/train_%A.err
 
@@ -19,7 +21,7 @@
 ##SBATCH --gres=gpu:1
 ##SBATCH --output=outputs/rq_train1_%A_%a.out
 ##SBATCH --error=outputs/rq_train1_%A_%a.err
-##SBATCH --mem=200GB
+##SBATCH --mem=250GB
 
 #module purge
 #module load python/gpu/3.6.5
@@ -36,12 +38,14 @@ echo "Running on $SLURM_NNODES nodes."
 echo "Running on $SLURM_NPROCS processors."
 
 
-exp_name="breast_alexnet_tr" 
-model="alexnet" #3layers, 4layers, 5layers, 7layers_v1, 7layers_v2, 6layers, 8 layers, resnet18, alexnet, vgg16
-im_size="224" #224, 299
+exp_name="lung_x10_1024_tr" 
+model="7layers" #3layers, 4layers, 5layers, 7layers_v1, 7layers_v2, 6layers, 8 layers, resnet18, alexnet, vgg16
+im_size="1024" #224, 299
+lls=14400 #1024-14400, 512-3136, 256-576
 
 echo "$exp_name"
 #--optimizer=SGD
+#--niter=1
 #lung
 #nparam="--cuda --calc_val_auc --augment  --init=xavier --dropout=0.1 --imgSize=${im_size} --nonlinearity=leaky --model_type=${model} --root_dir=/beegfs/sb3923/DeepCancer/alldata/LungTilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/LungTilesSorted/Lung_FileMappingDict.p" 
 #lung 5x
@@ -49,17 +53,27 @@ echo "$exp_name"
 #kidney
 #nparam="--cuda --calc_val_auc  --augment --init=xavier --dropout=0.1 --imgSize=${im_size} --nonlinearity=leaky --model_type=${model}  --root_dir=/beegfs/sb3923/DeepCancer/alldata/KidneyTilesSorted/ --num_class=4 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/KidneyTilesSorted/Kidney_FileMappingDict.p"
 #breast
-nparam="--cuda --optimizer=SGD --calc_val_auc  --augment --init=xavier --dropout=0.1 --imgSize=${im_size} --nonlinearity=leaky --model_type=${model}  --root_dir=/beegfs/sb3923/DeepCancer/alldata/BreastTilesSorted/ --num_class=2 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/BreastTilesSorted/Breast_FileMappingDict.p"
+#nparam="--cuda --calc_val_auc  --augment --init=xavier --dropout=0.1 --imgSize=${im_size} --nonlinearity=leaky --model_type=${model}  --root_dir=/beegfs/sb3923/DeepCancer/alldata/BreastTilesSorted/ --num_class=2 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/BreastTilesSorted/Breast_FileMappingDict.p"
+
 #breast subtypes
-#nparam="--cuda --calc_val_auc  --augment --init=xavier --dropout=0.1 --imgSize=${im_size} --nonlinearity=leaky --model_type=${model}  --root_dir=/beegfs/sb3923/DeepCancer/alldata/BreastSubtypes/BreastTilesSorted/ --num_class=5 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/BreastSubtypes/Breast_FileMappingDict.p"
+#nparam="--cuda --calc_val_auc  --augment --init=xavier --dropout=0.1 --imgSize=${im_size} --nonlinearity=leaky --model_type=${model} --root_dir=/beegfs/sb3923/DeepCancer/alldata/BreastSubtypes_basal_vs_rest_no_normal/BreastTilesSorted/ --num_class=2 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/BreastSubtypes_basal_vs_rest_no_normal/Breast_FileMappingDict.p"
+#nparam="--cuda --calc_val_auc --augment --init=xavier --dropout=0.1 --imgSize=${im_size} --nonlinearity=leaky --model_type=${model} --root_dir=/beegfs/sb3923/DeepCancer/alldata/BreastSubtypes_no_normal/BreastTilesSorted/ --num_class=4 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/BreastSubtypes_no_normal/Breast_FileMappingDict.p"
 
 #downsampled lung
 #ds1
-#nparam="--cuda  --augment --dropout=0.1 --imgSize=${im_size} --nonlinearity=leaky --model_type=${model} --init=xavier  --calc_val_auc --root_dir=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds1TilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds1_FileMappingDict.p" 
+#nparam="--cuda --calc_val_auc --augment  --init=xavier --dropout=0.1 --imgSize=${im_size} --nonlinearity=leaky --model_type=${model} --root_dir=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds1TilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds1_FileMappingDict.p" 
 #ds2
-#nparam="--cuda  --augment --dropout=0.1 --imgSize=${im_size} --nonlinearity=leaky --model_type=${model} --init=xavier  --calc_val_auc --root_dir=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds2TilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds2_FileMappingDict.p" 
+#nparam="--cuda --calc_val_auc --augment  --init=xavier --dropout=0.1 --imgSize=${im_size} --nonlinearity=leaky --model_type=${model} --root_dir=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds2TilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds2_FileMappingDict.p" 
 #ds3
-#nparam="--cuda  --augment --dropout=0.1 --imgSize=${im_size} --nonlinearity=leaky --model_type=${model} --init=xavier  --calc_val_auc --root_dir=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds3TilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds3_FileMappingDict.p" 
+#nparam="--cuda --calc_val_auc --augment  --init=xavier --dropout=0.1 --imgSize=${im_size} --nonlinearity=leaky --model_type=${model} --root_dir=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds3TilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/lung_ds/lung_ds3_FileMappingDict.p" 
+
+#1024 lung with different magnification
+#x5
+#nparam="--last_layer_size=${lls} --cuda --calc_val_auc --augment  --init=xavier --dropout=0.1 --imgSize=${im_size} --nonlinearity=leaky --model_type=${model} --root_dir=/beegfs/sb3923/DeepCancer/alldata/Lungx1024x5TilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/Lungx1024x5TilesSorted/Lungx1024x5_FileMappingDict.p" 
+#x10
+nparam="--last_layer_size=${lls} --cuda --calc_val_auc --augment  --init=xavier --dropout=0.1 --imgSize=${im_size} --nonlinearity=leaky --model_type=${model} --root_dir=/beegfs/sb3923/DeepCancer/alldata/Lungx1024x10TilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/Lungx1024x10TilesSorted/Lungx1024x10_FileMappingDict.p" 
+#x20
+#nparam="--last_layer_size=${lls} --cuda --calc_val_auc --augment  --init=xavier --dropout=0.1 --imgSize=${im_size} --nonlinearity=leaky --model_type=${model} --root_dir=/beegfs/sb3923/DeepCancer/alldata/Lungx1024x20TilesSorted/ --num_class=3 --tile_dict_path=/beegfs/sb3923/DeepCancer/alldata/Lungx1024x20TilesSorted/Lungx1024x20_FileMappingDict.p" 
 
 
 

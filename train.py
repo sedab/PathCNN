@@ -56,6 +56,7 @@ parser.add_argument('--tile_dict_path', type=str, default='"<ROOT_PATH><CANCER_T
 parser.add_argument('--step_freq', type=int, default=100000000, help='save the checkpoint at every step_freq steps')
 parser.add_argument('--calc_val_auc', action='store_true', help='trigger validation auc calculatio at each epoch (boolean)')
 parser.add_argument('--model_type', type=str, default='6layers', help='pathcnn depth: 5layers, 7layers_v1 or 7layers_v2 or alexnet,vgg16')
+parser.add_argument('--last_layer_size', type=int, default=1024, help='size of the last layer')
 
 opt = parser.parse_args()
 
@@ -69,6 +70,8 @@ num_classes = int(opt.num_class)
 tile_dict_path = str(opt.tile_dict_path)
 step_freq = int(opt.step_freq)
 model_type = str(opt.model_type)
+lls = int(opt.last_layer_size)
+
 
 """
 Save experiment 
@@ -298,7 +301,8 @@ class cancer_CNN_7layers(nn.Module):
         self.conv5 = BasicConv2d(64, 128, True, kernel_size=3, padding=1, bias=True)
         self.conv6 = BasicConv2d(128, 64, True, kernel_size=3, padding=1, bias=True)
         self.conv7 = BasicConv2d(64, 64, True, kernel_size=3, padding=1, bias=True)
-        self.linear = nn.Linear(1024, num_classes)
+        self.linear = nn.Linear(lls, num_classes)
+        
 
     def forward(self, x):
         x = self.conv1(x)
@@ -386,6 +390,10 @@ elif(opt.model_type == 'vgg16'):
 elif(opt.model_type == 'resnet18'):
     print('using resnet18')
     model = models.resnet18(num_classes=num_classes)    
+
+elif(opt.model_type == 'inceptionv3'):
+    print('using inceptionv3')
+    model = models.inception_v3(num_classes=num_classes,aux_logits=False)
 
 else:
     print('using PathCNN 6 layers')
@@ -662,4 +670,8 @@ for epoch in range(1,opt.niter+1):
 # Final evaluation
 print('Finished training, best AUC: %0.4f' % (best_AUC))
 end = time.time()
+local_time = time.ctime(end)
+print(local_time)
+
+print(end)
 print(end-start)

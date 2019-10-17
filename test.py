@@ -17,6 +17,7 @@ from utils.dataloader import *
 from utils.auc import *
 from utils import new_transforms
 import torchvision.models as models
+import time
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--experiment', default='', help="name of experiment to test")
@@ -47,7 +48,8 @@ transform = transforms.Compose([new_transforms.Resize((imgSize,imgSize)),
                                 transforms.ToTensor(),
                                 transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
-test_data = TissueData(root_dir, test_val, train_log=tl_file, transform = transform, metadata=False)
+#test_data = TissueData(root_dir, test_val, train_log=tl_file, transform = transform, metadata=False)
+test_data = TissueData(root_dir, test_val, train_log='', transform = transform, metadata=False)
 test_loader = torch.utils.data.DataLoader(test_data, batch_size=32, shuffle=False, num_workers=8)
 
 classes = test_data.classes
@@ -175,7 +177,6 @@ class BasicConv2d(nn.Module):
         x = self.dropout(x)
         return x
 
-# Define model
 class cancer_CNN(nn.Module):
     def __init__(self, nc, imgSize, ngpu):
         super(cancer_CNN, self).__init__()
@@ -190,6 +191,8 @@ class cancer_CNN(nn.Module):
         self.conv5 = BasicConv2d(64, 128, True, kernel_size=3, padding=1, bias=True)
         self.conv6 = BasicConv2d(128, 64, True, kernel_size=3, padding=1, bias=True)
         self.linear = nn.Linear(5184, num_classes)
+        #when input is 512
+        #self.linear = nn.Linear(14400, num_classes)
 
     def forward(self, x):
         x = self.conv1(x)
@@ -201,8 +204,56 @@ class cancer_CNN(nn.Module):
         x = x.view(x.size(0), -1)
         x = self.linear(x)
         return x
-      
-# Define model
+    
+class cancer_CNN_3layers(nn.Module):
+    def __init__(self, nc, imgSize, ngpu):
+        super(cancer_CNN_3layers, self).__init__()
+        self.nc = nc
+        self.imgSize = imgSize
+        self.ngpu = ngpu
+        #self.data = opt.data
+        self.conv1 = BasicConv2d(nc, 16, False, kernel_size=5, padding=1, stride=2, bias=True)
+        self.conv2 = BasicConv2d(16, 32, False, kernel_size=3, bias=True)
+        self.conv3 = BasicConv2d(32, 64, True, kernel_size=3, padding=1, bias=True)
+        #self.conv4 = BasicConv2d(64, 128, True, kernel_size=3, padding=1, bias=True)
+        #self.conv5 = BasicConv2d(128, 64, True, kernel_size=3, padding=1, bias=True)
+        self.linear = nn.Linear(341056, num_classes)
+
+    def forward(self, x):
+        x = self.conv1(x)
+        x = self.conv2(x)
+        x = self.conv3(x)
+        x = x.view(x.size(0), -1)
+        #print(x.size())
+        x = self.linear(x)
+        return x
+
+
+class cancer_CNN_4layers(nn.Module):
+    def __init__(self, nc, imgSize, ngpu):
+        super(cancer_CNN_4layers, self).__init__()
+        self.nc = nc
+        self.imgSize = imgSize
+        self.ngpu = ngpu
+        #self.data = opt.data
+        self.conv1 = BasicConv2d(nc, 16, False, kernel_size=5, padding=1, stride=2, bias=True)
+        self.conv2 = BasicConv2d(16, 32, False, kernel_size=3, bias=True)
+        self.conv3 = BasicConv2d(32, 64, True, kernel_size=3, padding=1, bias=True)
+        self.conv4 = BasicConv2d(64, 64, True, kernel_size=3, padding=1, bias=True)
+        #self.conv5 = BasicConv2d(64, 128, True, kernel_size=3, padding=1, bias=True)
+        self.linear = nn.Linear(82944, num_classes)
+
+    def forward(self, x):
+        x = self.conv1(x)
+        x = self.conv2(x)
+        x = self.conv3(x)
+        x = self.conv4(x)
+        #x = self.conv5(x)
+        x = x.view(x.size(0), -1)
+        x = self.linear(x)
+        return x
+
+    
 class cancer_CNN_5layers(nn.Module):
     def __init__(self, nc, imgSize, ngpu):
         super(cancer_CNN_5layers, self).__init__()
@@ -213,9 +264,9 @@ class cancer_CNN_5layers(nn.Module):
         self.conv1 = BasicConv2d(nc, 16, False, kernel_size=5, padding=1, stride=2, bias=True)
         self.conv2 = BasicConv2d(16, 32, False, kernel_size=3, bias=True)
         self.conv3 = BasicConv2d(32, 64, True, kernel_size=3, padding=1, bias=True)
-        self.conv4 = BasicConv2d(64, 128, True, kernel_size=3, padding=1, bias=True)
-        self.conv5 = BasicConv2d(128, 64, True, kernel_size=3, padding=1, bias=True)
-        self.linear = nn.Linear(20736, num_classes)
+        self.conv4 = BasicConv2d(64, 64, True, kernel_size=3, padding=1, bias=True)
+        self.conv5 = BasicConv2d(64, 128, True, kernel_size=3, padding=1, bias=True)
+        self.linear = nn.Linear(41472, num_classes)
 
     def forward(self, x):
         x = self.conv1(x)
@@ -226,42 +277,11 @@ class cancer_CNN_5layers(nn.Module):
         x = x.view(x.size(0), -1)
         x = self.linear(x)
         return x
-
-      
-class cancer_CNN_7layers_v1(nn.Module):
+    
+    
+class cancer_CNN_7layers(nn.Module):
     def __init__(self, nc, imgSize, ngpu):
-        super(cancer_CNN_7layers_v1, self).__init__()
-        self.nc = nc
-        self.imgSize = imgSize
-        self.ngpu = ngpu
-        #self.data = opt.data
-        self.conv1 = BasicConv2d(nc, 16, False, kernel_size=5, padding=1, stride=2, bias=True)
-        self.conv2 = BasicConv2d(16, 32, False, kernel_size=3, bias=True)
-        #new layer:
-        self.conv3 = BasicConv2d(32, 32, True, kernel_size=3, padding=1, bias=True)
-        self.conv4 = BasicConv2d(32, 64, True, kernel_size=3, padding=1, bias=True)
-        self.conv5 = BasicConv2d(64, 64, True, kernel_size=3, padding=1, bias=True)
-        self.conv6 = BasicConv2d(64, 128, True, kernel_size=3, padding=1, bias=True)
-        self.conv7 = BasicConv2d(128, 64, True, kernel_size=3, padding=1, bias=True)
-        self.linear = nn.Linear(1024, num_classes)
-
-    def forward(self, x):
-        x = self.conv1(x)
-        x = self.conv2(x)
-        x = self.conv3(x)
-        x = self.conv4(x)
-        x = self.conv5(x)
-        x = self.conv6(x)
-        x = self.conv7(x)
-        x = x.view(x.size(0), -1)
-        x = self.linear(x)
-        return x
-
-
-
-class cancer_CNN_7layers_v2(nn.Module):
-    def __init__(self, nc, imgSize, ngpu):
-        super(cancer_CNN_7layers_v2, self).__init__()
+        super(cancer_CNN_7layers, self).__init__()
         self.nc = nc
         self.imgSize = imgSize
         self.ngpu = ngpu
@@ -271,9 +291,8 @@ class cancer_CNN_7layers_v2(nn.Module):
         self.conv3 = BasicConv2d(32, 64, True, kernel_size=3, padding=1, bias=True)
         self.conv4 = BasicConv2d(64, 64, True, kernel_size=3, padding=1, bias=True)
         self.conv5 = BasicConv2d(64, 128, True, kernel_size=3, padding=1, bias=True)
-        #addition
-        self.conv6 = BasicConv2d(128, 128, True, kernel_size=3, padding=1, bias=True)
-        self.conv7 = BasicConv2d(128, 64, True, kernel_size=3, padding=1, bias=True)
+        self.conv6 = BasicConv2d(128, 64, True, kernel_size=3, padding=1, bias=True)
+        self.conv7 = BasicConv2d(64, 64, True, kernel_size=3, padding=1, bias=True)
         self.linear = nn.Linear(1024, num_classes)
 
     def forward(self, x):
@@ -288,31 +307,86 @@ class cancer_CNN_7layers_v2(nn.Module):
         x = self.linear(x)
         return x
 
+class cancer_CNN_8layers(nn.Module):
+    def __init__(self, nc, imgSize, ngpu):
+        super(cancer_CNN_8layers, self).__init__()
+        self.nc = nc
+        self.imgSize = imgSize
+        self.ngpu = ngpu
+        #self.data = opt.data
+        self.conv1 = BasicConv2d(nc, 16, False, kernel_size=5, padding=1, stride=2, bias=True)
+        self.conv2 = BasicConv2d(16, 32, False, kernel_size=3, bias=True)
+        self.conv3 = BasicConv2d(32, 64, True, kernel_size=3, padding=1, bias=True)
+        self.conv4 = BasicConv2d(64, 64, True, kernel_size=3, padding=1, bias=True)
+        self.conv5 = BasicConv2d(64, 128, True, kernel_size=3, padding=1, bias=True)
+        self.conv6 = BasicConv2d(128, 64, True, kernel_size=3, padding=1, bias=True)
+        self.conv7 = BasicConv2d(64, 64, True, kernel_size=3, padding=1, bias=True)
+        self.conv8 = BasicConv2d(64, 64, True, kernel_size=3, padding=1, bias=True)
+        self.linear = nn.Linear(256, num_classes)
+
+    def forward(self, x):
+        x = self.conv1(x)
+        x = self.conv2(x)
+        x = self.conv3(x)
+        x = self.conv4(x)
+        x = self.conv5(x)
+        x = self.conv6(x)
+        x = self.conv7(x)
+        x = self.conv8(x)
+        x = x.view(x.size(0), -1)
+        x = self.linear(x)
+        return x
+
 
 # Create model objects
-if opt.model_type == '5layers':
+if opt.model_type == '3layers':
+    print('using PathCNN 3 layers')
+    model = cancer_CNN_3layers(nc, imgSize, ngpu)
+
+elif opt.model_type == '4layers':
+    print('using PathCNN 4 layers')
+    model = cancer_CNN_4layers(nc, imgSize, ngpu)
+
+elif opt.model_type == '5layers':
     print('using PathCNN 5 layers')
     model = cancer_CNN_5layers(nc, imgSize, ngpu)
-elif opt.model_type == '7layers_v1':
-    print('using PathCNN 7 layers, v1')
-    model = cancer_CNN_7layers_v1(nc, imgSize, ngpu)
-elif opt.model_type == '7layers_v2':
-    print('using PathCNN 7 layers, v2')
-    model = cancer_CNN_7layers_v2(nc, imgSize, ngpu)
-elif(opt.model_type == 'alexnet'):
-    print('using alexnet')
-    model = models.alexnet(num_classes= num_classes)
-elif(opt.model_type == 'vgg16'):
-    print('using vgg16')
-    model = models.vgg16(num_classes=num_classes)
-elif(opt.model_type == 'resnet18'):
-    print('using resnet18')
-    model = models.resnet18(num_classes=num_classes)
-else:
+
+elif opt.model_type == '6layers':
     print('using PathCNN 6 layers')
     model = cancer_CNN(nc, imgSize, ngpu)
 
+elif opt.model_type == '7layers':
+    print('using PathCNN 7 layers')
+    model = cancer_CNN_7layers(nc, imgSize, ngpu)
+
+elif opt.model_type == '8layers':
+    print('using PathCNN 8 layers, v1')
+    model = cancer_CNN_8layers(nc, imgSize, ngpu)
+
+elif(opt.model_type == 'alexnet'):
+    print('using alexnet')
+    model = models.alexnet(num_classes=num_classes)
+
+elif(opt.model_type == 'vgg16'):
+    print('using vgg16')
+    model = models.vgg16(num_classes=num_classes)
+
+elif(opt.model_type == 'resnet18'):
+    print('using resnet18')
+    model = models.resnet18(num_classes=num_classes)    
+
+elif(opt.model_type == 'inceptionv3'):
+    print('using inceptionv3')
+    model = models.inception_v3(num_classes=num_classes,aux_logits=False)
+
+else:
+    print('using PathCNN 6 layers')
+    model = cancer_CNN(nc, imgSize, ngpu)
+    #init_model(model)
    
+start = time.time()
+local_time = time.ctime(start)
+print(local_time)
 
 model.cuda()
 
@@ -341,3 +415,7 @@ roc_auc  = get_auc('{0}/images/{1}_AUC_avg_{2}.jpg'.format(opt.experiment,opt.va
                    predictions, labels, classes = range(num_classes))
 print('Average method:')
 print(roc_auc)
+
+end = time.time()
+local_time = time.ctime(end)
+print(local_time)

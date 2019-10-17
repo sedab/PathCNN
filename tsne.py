@@ -23,32 +23,44 @@ from utils import new_transforms
 
 
 parser = argparse.ArgumentParser()
+parser.add_argument('--experiment', default='', help="name of experiment to test")
+parser.add_argument('--model', default='', help="name of model to test")
 parser.add_argument('--root_dir', type=str, default='<ROOT_PATH><CANCER_TYPE>TilesSorted/', help='Data directory .../dataTilesSorted/')
 parser.add_argument('--num_class', type=int, default=2, help='number of classes ')
 parser.add_argument('--tile_dict_path', type=str, default='"<ROOT_PATH><CANCER_TYPE>_FileMappingDict.p', help='Tile dictinory path')
 parser.add_argument('--val', type=str, default='test', help='validation set')
+parser.add_argument('--train_log', type=str, default='/gpfs/scratch/bilals01/test-repo/logs/exp6_train.log', help='point to the log file created from the training')
+parser.add_argument('--imgSize', type=int, default=299, help='the height / width of the image to network')
+parser.add_argument('--model_type',type=str,  default='PathCNN', help='choose the model to train with: PathCNN, alexnet,vgg16')
+parser.add_argument('--nc', type=int, default=3, help='input image channels (+ concatenated info channels if metadata = True)')
+parser.add_argument('--ngpu'  , type=int, default=1, help='number of GPUs to use')
 
 opt = parser.parse_args()
-
+nc = int(opt.nc)
 root_dir = str(opt.root_dir)
 num_classes = int(opt.num_class)
 tile_dict_path = str(opt.tile_dict_path)
-
+tl_file = str(opt.train_log)
 test_val = str(opt.val)
+imgSize = int(opt.imgSize)
+ngpu = int(opt.ngpu)
+test_val = str(opt.val)
+
 
 imgSize = 299
 
 transform = transforms.Compose([new_transforms.Resize((imgSize,imgSize)),
                                 transforms.ToTensor(),
                                 transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
-#use Tissuedata2 for ownsampled data, for test use the whole data
-test_data = TissueData(root_dir, test_val, transform = transform, metadata=False)
 
+#use Tissuedata2 for ownsampled data, for test use the whole data
+test_data = TissueData(root_dir, test_val, train_log=tl_file, transform = transform, metadata=False)
+#test_data = TissueData(root_dir, test_val, train_log='', transform = transform, metadata=False)
+test_loader = torch.utils.data.DataLoader(test_data, batch_size=32, shuffle=False, num_workers=8)
 
 #os.chdir("/scratch/sb3923/deep-cancer/tsne_figures/")
 #pickle.dump( test_data.filenames, open( "test_data.p", "wb" ) )
 
-test_loader = torch.utils.data.DataLoader(test_data, batch_size=32, shuffle=False)
 classes = test_data.classes
 
 class_to_idx = test_data.class_to_idx
@@ -79,11 +91,12 @@ def get_tile_probability(tile_path):
 
     # Model expects a 4D tensor, unsqueeze first dimension
     img = transform(img).unsqueeze(0)
+    img = img.cuda()
 
     # Turn output into probabilities with softmax
     var_img = Variable(img, volatile=True)
     output = F.softmax(model(var_img)[0]).data.squeeze(0) 
-    return output.numpy()
+    return output.cpu().numpy()
 
 
 def get_tile_probability2(tile_path):
@@ -95,7 +108,7 @@ def get_tile_probability2(tile_path):
     """
     # Some tiles are empty with no path, return nan
     if tile_path == '':
-        return np.full(5184, np.nan)
+        return np.full(1024, np.nan)
 
     tile_path = root_dir + tile_path
 
@@ -104,11 +117,12 @@ def get_tile_probability2(tile_path):
             img = img.convert('RGB')
     # Model expects a 4D tensor, unsqueeze first dimension
     img = transform(img).unsqueeze(0)
+    img = img.cuda()
 
     # Turn output into probabilities with softmax
     var_img = Variable(img, volatile=True)
     viz = (model(var_img)[1]).squeeze(0)#torch.FloatTensor of size 1x5184 
-    return viz.data.numpy() #numpy.ndarray
+    return viz.data.cpu().numpy() #numpy.ndarray
 
 
 
@@ -217,7 +231,7 @@ class cancer_CNN(nn.Module):
         self.nc = nc
         self.imgSize = imgSize
         self.ngpu = ngpu
-        self.data = 'all'
+        #self.data = 'all'
         self.conv1 = BasicConv2d(nc, 16, False, kernel_size=5, padding=1, stride=2, bias=True)
         self.conv2 = BasicConv2d(16, 32, False, kernel_size=3, bias=True)
         self.conv3 = BasicConv2d(32, 64, True, kernel_size=3, padding=1, bias=True)
@@ -238,24 +252,63 @@ class cancer_CNN(nn.Module):
         x = self.linear(x)
         return x, llw
 
+class cancer_CNN_7layers(nn.Module):
+     def __init__(self, nc, imgSize, ngpu):
+         super(cancer_CNN_7layers, self).__init__()
+         self.nc = nc
+         self.imgSize = imgSize
+         self.ngpu = ngpu
+         #self.data = opt.data
+         self.conv1 = BasicConv2d(nc, 16, False, kernel_size=5, padding=1, stride=2, bias=True)
+         self.conv2 = BasicConv2d(16, 32, False, kernel_size=3, bias=True)
+         self.conv3 = BasicConv2d(32, 64, True, kernel_size=3, padding=1, bias=True)
+         self.conv4 = BasicConv2d(64, 64, True, kernel_size=3, padding=1, bias=True)
+         self.conv5 = BasicConv2d(64, 128, True, kernel_size=3, padding=1, bias=True)
+         self.conv6 = BasicConv2d(128, 64, True, kernel_size=3, padding=1, bias=True)
+         self.conv7 = BasicConv2d(64, 64, True, kernel_size=3, padding=1, bias=True)
+         self.linear = nn.Linear(1024, num_classes)
+ 
+     def forward(self, x):
+         x = self.conv1(x)
+         x = self.conv2(x)
+         x = self.conv3(x)
+         x = self.conv4(x)
+         x = self.conv5(x)
+         x = self.conv6(x)
+         x = self.conv7(x)
+         x = x.view(x.size(0), -1)
+         llw=x
+         x = self.linear(x)
+         return x, llw
 
-model = cancer_CNN(3, imgSize, 1)
 
-model_path = "experiments/" + opt.experiment + '/' + opt.model
+if opt.model_type == '7layers':
+    print('using PathCNN 7 layers')
+    model = cancer_CNN_7layers(nc, imgSize, ngpu)
+
+else:
+    print('using PathCNN 6 layers')
+    model = cancer_CNN(nc, imgSize, ngpu)
+
+model.cuda()
+
+model_path = opt.experiment + '/checkpoints/' + opt.model
 state_dict = torch.load(model_path, map_location=lambda storage, loc: storage)
 model.load_state_dict(state_dict)
 
 predictions, labels, fw_lastlayer, file_names = aggregate(test_data.filenames, method='average')
 print('------------------------------------------------------')
-print('last-layer')
-print(fw_lastlayer)
+#print('last-layer')
+#print(fw_lastlayer)
 
 finalWs = fw_lastlayer
 os.chdir("tsne_data/")
-pickle.dump( finalWs, open( "finalWs_all_3.p", "wb" ) )
-pickle.dump( predictions, open( "predictions_all_3.p", "wb" ) )
-pickle.dump( labels, open( "labels_all_3.p", "wb" ) )
-pickle.dump( file_names, open( "file_names_3.p", "wb" ) )
+
+exp_name = opt.experiment.split('/')[-1]
+pickle.dump( finalWs, open( "finalWs_{0}_{1}_{2}.p".format(exp_name,opt.val,opt.model), "wb" ) )
+pickle.dump( predictions, open( "predictions_{0}_{1}_{2}.p".format(exp_name,opt.val,opt.model), "wb" ) )
+pickle.dump( labels, open( "labels_{0}_{1}_{2}.p".format(exp_name,opt.val,opt.model), "wb" ) )
+pickle.dump( file_names, open( "file_names_{0}_{1}_{2}.p".format(exp_name,opt.val,opt.model), "wb" ) )
 
 #A function provided by Google in one of their Tensorflow tutorials 
 #for visualizing data with t-SNE by plotting it to a graph.
@@ -276,10 +329,10 @@ def plot_with_labels(lowDWeights, labels, filename='tsne.png'):
     plt.savefig(filename)
     
 
-tsne = TSNE(perplexity=30, n_components=2, init='pca', n_iter=5000)
-plot_only = 500
-lowDWeights = tsne.fit_transform(fw_lastlayer)
-labels = ['0','1','2','3','4','5','6','7','8']
-plot_with_labels(lowDWeights, labels)
+#tsne = TSNE(perplexity=30, n_components=2, init='pca', n_iter=5000)
+#plot_only = 500
+#lowDWeights = tsne.fit_transform(fw_lastlayer)
+#labels = ['0','1','2','3','4','5','6','7','8']
+#plot_with_labels(lowDWeights, labels)
 
 
