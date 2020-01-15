@@ -221,7 +221,7 @@ The output data will be saved at tsne_data folder
 
 
 ## 4. Instructions for use
-* Use the model checkpoints in files in checkpoints folder and follow 5. Test model instructions in the above section.
+* Use the model checkpoints in files in checkpoints folder and follow 4. Test model instructions in the above section.
 
 ## 5. Additional resources:
 
