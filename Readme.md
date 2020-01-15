@@ -2,23 +2,24 @@
 
 Code acompaining paper: [Efficient pan-cancer whole-slide image classification and outlier detection using convolutional neural networks ](https://www.biorxiv.org/content/early/2019/05/14/633123.full.pdf)
 
-## Prerequisites
+## 1. System requirements 
+* software dependencies python3, PyTorch (software has been tested on Unix machine)
 
-* PyTorch 
-
-## Installing
-
-* Clone this repo to your local machine using:
+## 2. Installation guide
+* Instructions
+Clone this repo to your local machine using:
 ```
  git clone https://github.com/sedab/PathCNN.git
  
 ```
+* Typical install time on a "normal" desktop computer is around 3 minutes.
 
-## Usage
+## 3. Demo
+* Expected train and test time are described in the manuscript. 
 
 ### 1. Data:
 
-* Download the [GDC data transfer API](https://gdc.cancer.gov/access-data/gdc-data-transfer-tool)
+* To demo the software/code described in the manuscript you can download the [GDC data transfer API](https://gdc.cancer.gov/access-data/gdc-data-transfer-tool)
 * Create a manifest by selecting Cases > CANCER_TYPE and Files > Data Type > Tissue Slide Image.
 * Download the manifest into ```manifest_file```
 * Run the command ```gdc-client download -m manifest_file``` in Terminal
@@ -219,7 +220,10 @@ The output data will be saved at tsne_data folder
 * Use TSNE/tsne_visualize.ipynb to visualize the results (change the input file name to match with tsne.py output files  at tsne_data as needed)
 
 
-## Additional resources:
+## 4. Instructions for use
+* Use the model checkpoints in files in checkpoints folder and follow 5. Test model instructions in the above section.
+
+## 5. Additional resources:
 
 ### iPython Notebooks
 
