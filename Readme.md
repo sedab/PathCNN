@@ -24,11 +24,11 @@ Clone this repo to your local machine using:
 ## 3. Demo
 * Expected train and test time are described in the manuscript. 
 
-### 1. Data processing:
+### 3.1. Data processing:
 
 Note that data tiling and sorting scripts come from [Nicolas Coudray](https://github.com/ncoudray/DeepPATH/). Please refer to the README within `DeepPATH_code` for the full range of options. Additionally, note that these scripts may take a significant amount of computing power. We recommend submitting sections 2.1 and 2.2 to a high performance computing cluster with multiple CPUs.
 
-#### 1.1. Data tiling
+#### 3.1.1. Data tiling
 Run ```Tiling/0b_tileLoop_deepzoom2.py``` to tile the .svs images into .jpeg images. To replicate this particular project, select the following specifications:
 
 ```sh
@@ -49,7 +49,7 @@ python -u Tiling/0b_tileLoop_deepzoom2.py -s 512 -e 0 -j 28 -f jpeg -B 25 -o <OU
 
 * `-B 25`: 25% allowed background within a tile.
 
-#### 1.2. Data sorting
+#### 3.1.2. Data sorting
 To ensure that the later sections work properly, we recommend running these commands within `<ROOT_PATH>`, the directory in which your images will be stored:
 
 ```sh
@@ -83,7 +83,7 @@ python -u <FULL_PATH>/Tiling/0d_SortTiles.py --SourceFolder="<INPUT_PATH>" --Jso
 
 * `--nSplit=0` If nSplit > 0, it overrides the existing PercentTest and PercentTest options, splitting the data into n even categories. 
 
-#### 1.3. Build tile dictionary
+#### 3.1.3. Build tile dictionary
 
 Run `Tiling/BuildTileDictionary.py` to build a dictionary of slides that is used to map each slide to a 2D array of tile paths and the true label. This is used in the `aggregate` function during training and evaluation.
 
@@ -98,7 +98,7 @@ python3 -u Tiling/BuildTileDictionary.py --data <CANCER_TYPE> --file_path <ROOT_
 
 Note that this code assumes that the sorted tiles are stored in `<ROOT_PATH><CANCER_TYPE>TilesSorted`. If you do not follow this convention, you may need to modify this code.
 
-### 3. Train model:
+### 3.2 Train model:
 
 Run `train.py` to train with our CNN architecture. sbatch file `run_job.sh` is provided as an example script for submitting a GPU job for this script. Inside the run_job.sh, set parameteres: nexp, output and param as described below. You need to create two directories where the output of the training will be saved at: one for experiemnts, and one for logs. 
 
@@ -163,7 +163,7 @@ The model checkpoints at every epoch and steps (frequency determined by the user
 
 * `--calc_val_auc`: save validation auc calculatio at each epoch 
 
-### 4. Test model:
+### 3.3 Test model:
 
 Run ```test.py``` to evaluate a specific model on the test/validation data, ```run_test.sh``` is the associated sbatch file. Inside the run_test.sh, set parameteres: nexp, output and param as described below. 
 
@@ -197,11 +197,11 @@ The output data will be dumped under experiments/experiment_name folder.
 Note: If number of classes presented is less than what the model is trained for, you will need to pass the log file created by the model as input to the test script using `--train_log` parameter
 
 
-### 5. Evaluation:
+### 3.4 Evaluation:
 
 Use test_eval.ipynb to create the ROC curves and calculate the confidence intervals. To start a jupyter notebook on bigpurple, submit the run-jupyter.sbatch script and the follow the instructions on the output file.
 
-### 6. TSNE Analysis:
+### 3.5 TSNE Analysis:
 
 Once the model is trained, run ```tsne.py``` to extract the last layer weights to create the TSNE plots, ```run_tsne.sh``` is the associated sbatch file.
 
